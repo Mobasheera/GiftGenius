@@ -6,4 +6,174 @@
     <title>GiftGenius | Smart Gift Recommendations</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 </head>
+<body>
+    <header>
+        <div class="container">
+            <nav>
+                <div class="logo">
+                    <span>GiftGenius</span>
+                </div>
+                <ul class="nav-links">
+                    <li><a href="#" data-page="home">Home</a></li>
+                    <li><a href="#" data-page="categories">Categories</a></li>
+                    <li><a href="#" data-page="how-it-works">How It Works</a></li>
+                    <li><a href="#" data-page="about">About Us</a></li>
+                </ul>
+                <button class="cta-button">Sign Up</button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Home Section -->
+    <section class="page-section active" id="home">
+        <section class="hero">
+            <div class="container">
+                <h1>Find the Perfect Gift Every Time</h1>
+                <p>Our AI-powered gift recommendation system finds thoughtful, personalized gifts for your loved ones based on their interests and your budget.</p>
+                <button class="cta-button" onclick="scrollToGiftFinder()">Get Started</button>
+            </div>
+        </section>
+
+        <div class="container">
+            <section class="gift-finder">
+                <h2>Tell Us About Your Gift Recipient</h2>
+                <form id="gift-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="recipient-name">Recipient's Name</label>
+                            <input type="text" id="recipient-name" class="form-control" placeholder="Who is this gift for?">
+                        </div>
+                        <div class="form-group">
+                            <label for="relationship">Your Relationship</label>
+                            <select id="relationship" class="form-control">
+                                <option value="">Select relationship</option>
+                                <option value="friend">Friend</option>
+                                <option value="partner">Partner/Spouse</option>
+                                <option value="family">Family Member</option>
+                                <option value="colleague">Colleague</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="occasion">Occasion</label>
+                        <select id="occasion" class="form-control">
+                            <option value="">Select occasion</option>
+                            <option value="birthday">Birthday</option>
+                            <option value="anniversary">Anniversary</option>
+                            <option value="holiday">Holiday</option>
+                            <option value="graduation">Graduation</option>
+                            <option value="wedding">Wedding</option>
+                            <option value="baby">Baby Shower</option>
+                            <option value="housewarming">Housewarming</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Age Range</label>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <select id="age-range" class="form-control">
+                                    <option value="">Select age range</option>
+                                    <option value="child">Child (0-12)</option>
+                                    <option value="teen">Teen (13-19)</option>
+                                    <option value="young-adult">Young Adult (20-29)</option>
+                                    <option value="adult">Adult (30-49)</option>
+                                    <option value="middle-age">Middle Age (50-64)</option>
+                                    <option value="senior">Senior (65+)</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <select id="gender" class="form-control">
+                                    <option value="">Select gender (optional)</option>
+                                    <option value="male">Male</option>
+                                    <option value="female">Female</option>
+                                    <option value="non-binary">Non-binary</option>
+                                    <option value="prefer-not-to-say">Prefer not to say</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Interests & Hobbies</label>
+                        <input type="text" id="interests-input" class="form-control" placeholder="Type interests or select from below">
+                        <div class="tags-container">
+                            <span class="interest-tag">Reading</span>
+                            <span class="interest-tag">Music</span>
+                            <span class="interest-tag">Gaming</span>
+                            <span class="interest-tag">Cooking</span>
+                            <span class="interest-tag">Travel</span>
+                            <span class="interest-tag">Sports</span>
+                            <span class="interest-tag">Art</span>
+                            <span class="interest-tag">Technology</span>
+                            <span class="interest-tag">Fashion</span>
+                            <span class="interest-tag">Health & Wellness</span>
+                            <span class="interest-tag">Home Decor</span>
+                            <span class="interest-tag">Gardening</span>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="price-range">Budget Range: ₹<span id="price-value">500</span></label>
+                        <input type="range" id="price-range" min="100" max="5000" step="100" value="500" class="form-control">
+                        <div class="price-labels">
+                            <span>₹100</span>
+                            <span>₹5000</span>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="special-notes">Any Special Notes or Requirements?</label>
+                        <textarea id="special-notes" class="form-control" rows="3" placeholder="Tell us anything else that might help us find the perfect gift..."></textarea>
+                    </div>
+                    
+                    <button type="submit" class="cta-button" style="width: 100%;">Find Perfect Gifts</button>
+                </form>
+            </section>
+            
+            <div class="loading">
+                <div class="loading-spinner"></div>
+                <p>Finding perfect gift ideas based on your preferences...</p>
+            </div>
+            
+            <section class="results-section" id="results-section">
+                <h2>Here Are Your Personalized Gift Recommendations</h2>
+                <div class="results-grid">
+                    <!-- Gift cards will be generated here -->
+                </div>
+            </section>
+        </div>
+    </section>
+	<div class="gift-image">
+                        <img src="${product.image}" alt="${product.title}">
+                    </div>
+                    <div class="gift-info">
+                        <h3 class="gift-title">${product.title}</h3>
+                        <div class="gift-price">${product.price}</div>
+                        <p class="gift-description">${product.description}</p>
+                        <div class="gift-meta">
+                            <div class="popularity">
+                                <span class="stars">★★★★★</span>
+                                <span>${product.rating} (${product.reviews})</span>
+                            </div>
+                        </div>
+                        <a href="${product.amazonLink}" target="_blank" class="amazon-button">Buy on Amazon</a>
+                    </div>
+                `;
+                productsGrid.appendChild(productCard);
+            });
+        }
+
+        function hideCategoryProducts() {
+            // Hide products section
+            document.getElementById('category-products').style.display = 'none';
+            
+            // Show categories grid
+            document.querySelector('.categories-grid').style.display = 'grid';
+        }
+    </script>
+</body>
 </html> 
