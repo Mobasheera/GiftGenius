@@ -48,6 +48,21 @@ app.post('/recommendations', (req, res) => {
   });
 });
 
+//Pagination
+app.get('/products', (req, res) => {
+  const limit = parseInt(req.query.limit) || 10;  // Limit to 10 products per page by default
+  const offset = parseInt(req.query.offset) || 0; // Offset for pagination
+  
+  db.query('SELECT * FROM products LIMIT ? OFFSET ?', [limit, offset], (err, results) => {
+    if (err) {
+      res.status(500).json({ error: 'Failed to fetch products' });
+    } else {
+      res.json(results);
+    }
+  });
+});
+
+
 // Start the Express server
 app.listen(3000, () => {
   console.log('Server is running on port 3000');
