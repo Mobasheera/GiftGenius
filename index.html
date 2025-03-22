@@ -1290,25 +1290,7 @@
                     <button class="cta-button" id="getStartedBtn">Get Started</button>
                 </div>
                 <div class="hero-image">
-                    <svg class="gift-icon" viewBox="0 0 100 100" id="giftIcon">
-                        <!-- Gift box body -->
-                        <rect class="gift-box" x="20" y="40" width="60" height="40" rx="5" ry="5"></rect>
-                        
-                        <!-- Gift lid -->
-                        <rect class="gift-lid" x="15" y="35" width="70" height="10" rx="2" ry="2"></rect>
-                        
-                        <!-- Gift ribbon -->
-                        <path class="gift-ribbon" d="M50 35 L60 25 L50 15 L40 25 Z"></path>
-                        <path class="gift-ribbon" d="M30 45 L40 35 L30 25 L20 35 Z"></path>
-                        <path class="gift-ribbon" d="M70 45 L80 35 L70 25 L60 35 Z"></path>
-                        
-                        <!-- Heart shape -->
-                        <path class="heart" d="M50 55 
-                              C 50 45, 40 45, 40 55 
-                              A 5 5 0 0 0 50 65 
-                              A 5 5 0 0 0 60 55 
-                              C 60 45, 50 45, 50 55 Z"/>
-                    </svg>
+                    <img src="https://i.postimg.cc/wy6nfjk4/valentines-day.jpg" alt="Valentine's Day Gift" class="gift-icon" id="giftIcon">
                 </div>
             </div>
         </section>
@@ -1702,6 +1684,27 @@
             </div>
             <div class="auth-switch">
                 Don't have an account? <a href="#" onclick="switchToSignup(event)">Sign Up</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Forgot Password Modal -->
+    <div class="modal-overlay" id="forgotPasswordModal">
+        <div class="modal">
+            <button class="close-modal" onclick="closeForgotPasswordModal()">&times;</button>
+            <div class="modal-header">
+                <h2>Reset Password</h2>
+                <p>Enter your email address to receive password reset instructions</p>
+            </div>
+            <form class="signup-form" onsubmit="handleForgotPassword(event)">
+                <div class="form-field">
+                    <input type="email" id="resetEmail" placeholder=" " required>
+                    <label for="resetEmail">Email Address</label>
+                </div>
+                <button type="submit" class="signup-button">Send Reset Link</button>
+            </form>
+            <div class="auth-switch">
+                Remember your password? <a href="#" onclick="switchToLogin(event)">Log In</a>
             </div>
         </div>
     </div>
@@ -2276,6 +2279,41 @@
                     }, 1000 + (i * 100));
                 }
             });
+        });
+
+        // Forgot Password Functions
+        function openForgotPasswordModal() {
+            document.getElementById('forgotPasswordModal').style.display = 'block';
+            document.getElementById('loginModal').style.display = 'none';
+            document.body.style.overflow = 'hidden';
+        }
+        
+        function closeForgotPasswordModal() {
+            document.getElementById('forgotPasswordModal').style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+        
+        function handleForgotPassword(event) {
+            event.preventDefault();
+            const email = document.getElementById('resetEmail').value;
+            
+            // Add your password reset logic here
+            console.log('Password Reset Request:', { email });
+            alert('Password reset link has been sent to your email!');
+            closeForgotPasswordModal();
+        }
+
+        // Update the forgot password link click handler
+        document.querySelector('.forgot-password').addEventListener('click', function(e) {
+            e.preventDefault();
+            openForgotPasswordModal();
+        });
+
+        // Close forgot password modal when clicking outside
+        document.getElementById('forgotPasswordModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeForgotPasswordModal();
+            }
         });
     </script>
 </body>
