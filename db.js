@@ -1,11 +1,11 @@
 const mysql = require('mysql2');  // Use mysql2 instead of mysql
 
 const connection = mysql.createConnection({
-  host: '192.168.137.207',    // Railway provided host
-  user: 'root',                      // Railway provided username
-  password: 'Moba@69420', // Railway provided password
-  database: 'gift_recommendation',               // Railway provided DB name
-  port: 3306                   // Railway provided port, no quotes needed for port
+  host: 'mysql.railway.internal',   // Railway provided host
+  user: 'root',                     // Railway provided username
+  password: 'lSxhjCOrUJevgjYrnkRxZnqOBPljqotB', // Railway provided password
+  database: 'railway',               // Railway provided DB name
+  port: 3306                         // Standard MySQL port (not 'root')
 });
 
 connection.connect((err) => {
