@@ -53,61 +53,137 @@
         
         /* Header Styles */
         header {
-            background-color: var(--white);
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            background-color: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
             position: sticky;
             top: 0;
             z-index: 100;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
         
         nav {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 20px 0;
+            padding: 15px 0;
         }
         
         .logo {
             display: flex;
             align-items: center;
-            font-size: 24px;
-            font-weight: 700;
+            font-size: 28px;
+            font-weight: 800;
             color: var(--primary);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            padding: 8px 15px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, rgba(255, 107, 107, 0.1), rgba(107, 143, 247, 0.1));
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .logo::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transform: translateX(-100%);
+            transition: transform 0.6s;
+        }
+        
+        .logo:hover::before {
+            transform: translateX(100%);
+        }
+        
+        .logo:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.2);
         }
         
         .logo i {
-            margin-right: 8px;
-            font-size: 28px;
+            margin-right: 12px;
+            font-size: 32px;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            position: relative;
+        }
+        
+        .logo span {
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            position: relative;
+            letter-spacing: -0.5px;
         }
         
         .nav-links {
             display: flex;
             list-style: none;
             gap: 30px;
+            margin: 0;
+            padding: 0;
+            margin-right: 20px;
         }
         
         .nav-links a {
             text-decoration: none;
             color: var(--text);
             font-weight: 500;
-            transition: color 0.3s;
+            font-size: 16px;
+            padding: 8px 0;
+            position: relative;
+            transition: color 0.3s ease;
+        }
+        
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            transition: width 0.3s ease;
         }
         
         .nav-links a:hover {
             color: var(--primary);
         }
         
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+        
+        .nav-links a.active {
+            color: var(--primary);
+        }
+        
+        .nav-links a.active::after {
+            width: 100%;
+        }
+        
         .cta-button {
-            background-color: var(--primary);
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
             color: white;
             border: none;
-            padding: 10px 20px;
+            padding: 12px 30px;
             border-radius: 50px;
             font-weight: 600;
+            font-size: 16px;
             cursor: pointer;
             transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.2);
         }
         
         .cta-button::before {
@@ -130,18 +206,20 @@
         
         .cta-button:hover {
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3);
+            box-shadow: 0 6px 20px rgba(255, 107, 107, 0.3);
         }
         
         /* Hero Section */
         .hero {
             padding: 80px 0;
-            text-align: center;
             background: linear-gradient(135deg, #fff6f6 0%, #f0f4ff 100%);
             border-radius: 0 0 30px 30px;
             margin-bottom: 60px;
             position: relative;
             overflow: hidden;
+            min-height: 600px;
+            display: flex;
+            align-items: center;
         }
         
         .hero::before {
@@ -151,13 +229,67 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0) 70%);
+            background: linear-gradient(45deg, rgba(255, 107, 107, 0.1), rgba(107, 143, 247, 0.1));
+            animation: gradientBG 15s ease infinite;
             z-index: 1;
+        }
+        
+        .hero::after {
+            content: '';
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, var(--primary-light) 0%, transparent 70%);
+            border-radius: 50%;
+            top: -150px;
+            right: -150px;
+            opacity: 0.3;
+            animation: pulse 8s ease-in-out infinite;
         }
         
         .hero .container {
             position: relative;
             z-index: 2;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 40px;
+        }
+        
+        .hero-content {
+            flex: 1;
+            text-align: left;
+            animation: fadeInLeft 1s ease-out;
+        }
+        
+        .hero-image {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            animation: fadeInRight 1s ease-out;
+            background: transparent;
+        }
+        
+        .hero-image img {
+            max-width: 100%;
+            height: auto;
+            filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.1));
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        .hero-image::before {
+            content: '';
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            background: linear-gradient(45deg, var(--primary-light), var(--secondary));
+            border-radius: 50%;
+            filter: blur(50px);
+            opacity: 0.3;
+            z-index: -1;
+            animation: pulse 4s ease-in-out infinite;
         }
         
         .hero h1 {
@@ -170,6 +302,27 @@
             background-clip: text;
             color: transparent;
             animation: gradient 8s ease infinite;
+            text-align: left;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .hero h1::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            transform: scaleX(0);
+            transform-origin: right;
+            transition: transform 0.5s ease;
+        }
+        
+        .hero h1:hover::after {
+            transform: scaleX(1);
+            transform-origin: left;
         }
         
         .hero p {
@@ -177,6 +330,88 @@
             max-width: 600px;
             margin: 0 auto 40px;
             color: var(--dark-gray);
+            line-height: 1.8;
+            animation: fadeInUp 1s ease-out 0.3s both;
+        }
+        
+        .hero .cta-button {
+            animation: fadeInUp 1s ease-out 0.6s both;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+        
+        .hero .cta-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: 0.5s;
+            z-index: -1;
+        }
+        
+        .hero .cta-button:hover::before {
+            left: 100%;
+        }
+        
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        @keyframes fadeInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        @keyframes fadeInRight {
+            from {
+                opacity: 0;
+                transform: translateX(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes float {
+            0% {
+                transform: translateY(0) scale(1);
+            }
+            50% {
+                transform: translateY(-20px) scale(1.05);
+            }
+            100% {
+                transform: translateY(0) scale(1);
+            }
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 0.3; }
+            50% { transform: scale(1.2); opacity: 0.2; }
+            100% { transform: scale(1); opacity: 0.3; }
         }
         
         /* Gift Finder Form */
@@ -187,7 +422,7 @@
             padding: 40px;
             margin: 0 auto 60px;
             max-width: 800px;
-            background: rgba(255, 255, 255, 0.9);
+            background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.2);
@@ -278,23 +513,7 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
         
-        .price-range {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .price-range input {
-            flex: 1;
-        }
-        
-        .price-labels {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 5px;
-            font-size: 14px;
-            color: var(--dark-gray);
-        }
+        /* Remove price range slider styles since we're using a select dropdown */
         
         /* Results Section */
         .results-section {
@@ -405,7 +624,7 @@
             display: block;
             text-align: center;
             padding: 12px;
-            background-color: var(--secondary);
+            background-color: linear-gradient(45deg, var(--primary), var(--secondary));
             color: white;
             border: none;
             border-radius: 8px;
@@ -417,7 +636,7 @@
         }
         
         .view-button:hover {
-            background-color: #5a7ce6;
+            background-color: linear-gradient(45deg, var(--secondary), var(--primary));
         }
         
         /* Footer */
@@ -507,20 +726,26 @@
         
         /* Floating Animation for Cards */
         @keyframes float {
-            0% { transform: translateY(0px); }
-            50% { transform: translateY(-10px); }
-            100% { transform: translateY(0px); }
+            0% {
+                transform: translateY(0) scale(1);
+            }
+            50% {
+                transform: translateY(-20px) scale(1.05);
+            }
+            100% {
+                transform: translateY(0) scale(1);
+            }
         }
         
-        .gift-card, .category-card {
+        .gift-card {
             animation: float 6s ease-in-out infinite;
         }
         
-        .gift-card:nth-child(2), .category-card:nth-child(2) {
+        .gift-card:nth-child(2) {
             animation-delay: 0.2s;
         }
         
-        .gift-card:nth-child(3), .category-card:nth-child(3) {
+        .gift-card:nth-child(3) {
             animation-delay: 0.4s;
         }
         
@@ -656,7 +881,7 @@
         .step-number {
             width: 40px;
             height: 40px;
-            background: var(--primary);
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
             color: white;
             border-radius: 50%;
             display: flex;
@@ -739,7 +964,7 @@
             display: block;
             text-align: center;
             padding: 12px;
-            background-color: #ff9900;
+            background-color: linear-gradient(45deg, var(--primary), var(--secondary));
             color: white;
             border: none;
             border-radius: 8px;
@@ -752,9 +977,285 @@
         }
 
         .amazon-button:hover {
-            background-color: #e68a00;
+            background-color: linear-gradient(45deg, var(--secondary), var(--primary));
             transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(255, 153, 0, 0.3);
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 0.3; }
+            50% { transform: scale(1.2); opacity: 0.2; }
+            100% { transform: scale(1); opacity: 0.3; }
+        }
+
+        /* Login/Signup Toggle */
+        .auth-switch {
+            text-align: center;
+            margin-top: 20px;
+            color: var(--dark-gray);
+        }
+        
+        .auth-switch a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        .auth-switch a:hover {
+            color: var(--secondary);
+            text-decoration: underline;
+        }
+        
+        /* Remember Me and Forgot Password */
+        .form-options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 15px 0;
+        }
+        
+        .remember-me {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--dark-gray);
+        }
+        
+        .remember-me input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            accent-color: var(--primary);
+        }
+        
+        .forgot-password {
+            color: var(--primary);
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.3s;
+        }
+        
+        .forgot-password:hover {
+            color: var(--secondary);
+            text-decoration: underline;
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            z-index: 1000;
+        }
+        
+        .modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            width: 90%;
+            max-width: 500px;
+            z-index: 1001;
+        }
+        
+        /* Additional Modal Styles */
+        .modal-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .modal-header h2 {
+            color: var(--text);
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        
+        .modal-header p {
+            color: var(--dark-gray);
+        }
+        
+        .close-modal {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--dark-gray);
+            transition: color 0.3s;
+        }
+        
+        .close-modal:hover {
+            color: var(--text);
+        }
+        
+        .form-field {
+            position: relative;
+            margin-bottom: 20px;
+        }
+        
+        .form-field input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid var(--gray);
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        .form-field input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+        
+        .form-field label {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: white;
+            padding: 0 5px;
+            color: var(--dark-gray);
+            transition: all 0.3s;
+            pointer-events: none;
+        }
+        
+        .form-field input:focus + label,
+        .form-field input:not(:placeholder-shown) + label {
+            top: 0;
+            font-size: 14px;
+            color: var(--primary);
+        }
+        
+        .signup-button {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .signup-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+        }
+        
+        .social-signup {
+            text-align: center;
+            margin-top: 20px;
+        }
+        
+        .social-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .social-button {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 12px;
+            background: var(--light-bg);
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .social-button:hover {
+            background: var(--gray);
+        }
+        
+        .social-button img {
+            width: 20px;
+            height: 20px;
+        }
+        
+        .gift-icon {
+            width: 400px;
+            height: 400px;
+            cursor: pointer;
+            user-select: none;
+            animation: float 6s ease-in-out infinite;
+            filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.1));
+            background: transparent;
+        }
+        
+        /* Base style for the gift box and lid */
+        .gift-box {
+            fill: #FF6B6B;
+            stroke: #FF8E8E;
+            stroke-width: 3;
+            filter: drop-shadow(0 4px 8px rgba(255, 107, 107, 0.3));
+        }
+        
+        .gift-lid {
+            fill: #FF8E8E;
+            stroke: #FF6B6B;
+            stroke-width: 3;
+            filter: drop-shadow(0 4px 8px rgba(255, 107, 107, 0.3));
+            transform-origin: 50% 100%;
+            transition: transform 0.5s ease;
+        }
+        
+        .gift-ribbon {
+            fill: #FFD93D;
+            stroke: #FFB800;
+            stroke-width: 2;
+        }
+        
+        /* Style for the heart */
+        .heart {
+            fill: #FF6B6B;
+            stroke: #FF8E8E;
+            stroke-width: 2;
+            opacity: 0;
+            transform: translateY(20px) scale(0.8);
+            transform-origin: center bottom;
+            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        
+        /* On click, animate the lid and heart */
+        .active .gift-lid {
+            transform: rotateX(-60deg);
+        }
+        
+        .active .heart {
+            opacity: 1;
+            transform: translateY(-30px) scale(1);
+        }
+        
+        @keyframes popHeart {
+            0% {
+                transform: rotate(45deg) scale(0);
+                opacity: 0;
+            }
+            50% {
+                opacity: 1;
+            }
+            100% {
+                transform: rotate(45deg) scale(1) translate(var(--tx), var(--ty));
+                opacity: 0;
+            }
         }
     </style>
 </head>
@@ -762,16 +1263,19 @@
     <header>
         <div class="container">
             <nav>
-                <div class="logo">
+                <a href="#" class="logo">
+                    <i class="fas fa-gift"></i>
                     <span>GiftGenius</span>
+                </a>
+                <div style="display: flex; align-items: center; margin-left: auto;">
+                    <ul class="nav-links">
+                        <li><a href="#" data-page="home" class="active">Home</a></li>
+                        <li><a href="#" data-page="categories">Categories</a></li>
+                        <li><a href="#" data-page="how-it-works">How It Works</a></li>
+                        <li><a href="#" data-page="about">About Us</a></li>
+                    </ul>
+                    <button class="cta-button" onclick="openSignupModal()">Sign Up</button>
                 </div>
-                <ul class="nav-links">
-                    <li><a href="#" data-page="home">Home</a></li>
-                    <li><a href="#" data-page="categories">Categories</a></li>
-                    <li><a href="#" data-page="how-it-works">How It Works</a></li>
-                    <li><a href="#" data-page="about">About Us</a></li>
-                </ul>
-                <button class="cta-button">Sign Up</button>
             </nav>
         </div>
     </header>
@@ -780,9 +1284,32 @@
     <section class="page-section active" id="home">
         <section class="hero">
             <div class="container">
-                <h1>Find the Perfect Gift Every Time</h1>
-                <p>Our AI-powered gift recommendation system finds thoughtful, personalized gifts for your loved ones based on their interests and your budget.</p>
-                <button class="cta-button" onclick="scrollToGiftFinder()">Get Started</button>
+                <div class="hero-content">
+                    <h1>Find the Perfect Gift Every Time</h1>
+                    <p>Our AI-powered gift recommendation system finds thoughtful, personalized gifts for your loved ones based on their interests and your budget.</p>
+                    <button class="cta-button" id="getStartedBtn">Get Started</button>
+                </div>
+                <div class="hero-image">
+                    <svg class="gift-icon" viewBox="0 0 100 100" id="giftIcon">
+                        <!-- Gift box body -->
+                        <rect class="gift-box" x="20" y="40" width="60" height="40" rx="5" ry="5"></rect>
+                        
+                        <!-- Gift lid -->
+                        <rect class="gift-lid" x="15" y="35" width="70" height="10" rx="2" ry="2"></rect>
+                        
+                        <!-- Gift ribbon -->
+                        <path class="gift-ribbon" d="M50 35 L60 25 L50 15 L40 25 Z"></path>
+                        <path class="gift-ribbon" d="M30 45 L40 35 L30 25 L20 35 Z"></path>
+                        <path class="gift-ribbon" d="M70 45 L80 35 L70 25 L60 35 Z"></path>
+                        
+                        <!-- Heart shape -->
+                        <path class="heart" d="M50 55 
+                              C 50 45, 40 45, 40 55 
+                              A 5 5 0 0 0 50 65 
+                              A 5 5 0 0 0 60 55 
+                              C 60 45, 50 45, 50 55 Z"/>
+                    </svg>
+                </div>
             </div>
         </section>
 
@@ -869,12 +1396,16 @@
                     </div>
                     
                     <div class="form-group">
-                        <label for="price-range">Budget Range: ₹<span id="price-value">500</span></label>
-                        <input type="range" id="price-range" min="100" max="5000" step="100" value="500" class="form-control">
-                        <div class="price-labels">
-                            <span>₹100</span>
-                            <span>₹5000</span>
-                        </div>
+                        <label for="price-range">Budget Range</label>
+                        <select id="price-range" class="form-control">
+                            <option value="">Select budget range</option>
+                            <option value="100-500">Under ₹500</option>
+                            <option value="500-1000">₹500 - ₹1,000</option>
+                            <option value="1000-2000">₹1,000 - ₹2,000</option>
+                            <option value="2000-5000">₹2,000 - ₹5,000</option>
+                            <option value="5000-10000">₹5,000 - ₹10,000</option>
+                            <option value="10000+">Above ₹10,000</option>
+                        </select>
                     </div>
                     
                     <div class="form-group">
@@ -935,6 +1466,22 @@
                         <h3 class="category-title">Sports & Outdoors</h3>
                         <p class="category-description">Equipment and gear for sports enthusiasts.</p>
                         <a href="#" class="view-button" onclick="showCategoryProducts('sports')">Explore</a>
+                    </div>
+                </div>
+                <div class="category-card">
+                    <div class="category-image" style="background-image: url('https://picsum.photos/400/300?random=5')"></div>
+                    <div class="category-info">
+                        <h3 class="category-title">Books & Stationery</h3>
+                        <p class="category-description">Books, notebooks, and writing supplies for bookworms and creative minds.</p>
+                        <a href="#" class="view-button" onclick="showCategoryProducts('books')">Explore</a>
+                    </div>
+                </div>
+                <div class="category-card">
+                    <div class="category-image" style="background-image: url('https://picsum.photos/400/300?random=6')"></div>
+                    <div class="category-info">
+                        <h3 class="category-title">Health & Wellness</h3>
+                        <p class="category-description">Products for fitness, relaxation, and overall well-being.</p>
+                        <a href="#" class="view-button" onclick="showCategoryProducts('health')">Explore</a>
                     </div>
                 </div>
             </div>
@@ -1072,15 +1619,94 @@
         </div>
     </footer>
 
+    <!-- Sign Up Modal -->
+    <div class="modal-overlay" id="signupModal">
+        <div class="modal">
+            <button class="close-modal" onclick="closeSignupModal()">&times;</button>
+            <div class="modal-header">
+                <h2>Create Your Account</h2>
+                <p>Join GiftGenius to discover perfect gifts for your loved ones</p>
+            </div>
+            <form class="signup-form" onsubmit="handleSignup(event)">
+                <div class="form-field">
+                    <input type="text" id="fullName" placeholder=" " required>
+                    <label for="fullName">Full Name</label>
+                </div>
+                <div class="form-field">
+                    <input type="email" id="signupEmail" placeholder=" " required>
+                    <label for="signupEmail">Email Address</label>
+                </div>
+                <div class="form-field">
+                    <input type="password" id="signupPassword" placeholder=" " required>
+                    <label for="signupPassword">Password</label>
+                </div>
+                <button type="submit" class="signup-button">Create Account</button>
+            </form>
+            <div class="social-signup">
+                <p>Or sign up with</p>
+                <div class="social-buttons">
+                    <button class="social-button">
+                        <img src="https://cdn-icons-png.flaticon.com/512/2991/2991148.png" alt="Google">
+                        Google
+                    </button>
+                    <button class="social-button">
+                        <img src="https://cdn-icons-png.flaticon.com/512/5968/5968764.png" alt="Facebook">
+                        Facebook
+                    </button>
+                </div>
+            </div>
+            <div class="auth-switch">
+                Already have an account? <a href="#" onclick="switchToLogin(event)">Log In</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Login Modal -->
+    <div class="modal-overlay" id="loginModal">
+        <div class="modal">
+            <button class="close-modal" onclick="closeLoginModal()">&times;</button>
+            <div class="modal-header">
+                <h2>Welcome Back!</h2>
+                <p>Log in to continue your gift-giving journey</p>
+            </div>
+            <form class="signup-form" onsubmit="handleLogin(event)">
+                <div class="form-field">
+                    <input type="email" id="loginEmail" placeholder=" " required>
+                    <label for="loginEmail">Email Address</label>
+                </div>
+                <div class="form-field">
+                    <input type="password" id="loginPassword" placeholder=" " required>
+                    <label for="loginPassword">Password</label>
+                </div>
+                <div class="form-options">
+                    <label class="remember-me">
+                        <input type="checkbox" id="rememberMe">
+                        Remember me
+                    </label>
+                    <a href="#" class="forgot-password">Forgot Password?</a>
+                </div>
+                <button type="submit" class="signup-button">Log In</button>
+            </form>
+            <div class="social-signup">
+                <p>Or log in with</p>
+                <div class="social-buttons">
+                    <button class="social-button">
+                        <img src="https://cdn-icons-png.flaticon.com/512/2991/2991148.png" alt="Google">
+                        Google
+                    </button>
+                    <button class="social-button">
+                        <img src="https://cdn-icons-png.flaticon.com/512/5968/5968764.png" alt="Facebook">
+                        Facebook
+                    </button>
+                </div>
+            </div>
+            <div class="auth-switch">
+                Don't have an account? <a href="#" onclick="switchToSignup(event)">Sign Up</a>
+            </div>
+        </div>
+    </div>
+
     <script>
-        // Price range slider
-        const priceRange = document.getElementById('price-range');
-        const priceValue = document.getElementById('price-value');
-        
-        priceRange.addEventListener('input', function() {
-            priceValue.textContent = this.value;
-        });
-        
         // Interest tags selection
         const interestTags = document.querySelectorAll('.interest-tag');
         
@@ -1238,7 +1864,8 @@
         }
 
         function scrollToGiftFinder() {
-            document.querySelector('.gift-finder').scrollIntoView({ behavior: 'smooth' });
+            const giftFinder = document.querySelector('.gift-finder');
+            giftFinder.scrollIntoView({ behavior: 'smooth' });
         }
 
         // Category Products Data
@@ -1358,6 +1985,64 @@
                     reviews: 234,
                     amazonLink: "https://www.amazon.in/Fitbit-Smartwatch-Activity-Tracking-Compatible/dp/B07P8QZ6KX/"
                 }
+            ],
+            health: [
+                {
+                    title: "Fitbit Charge 5",
+                    price: "₹24,999",
+                    image: "https://picsum.photos/400/320?random=22",
+                    description: "Advanced fitness tracker with heart rate monitoring and sleep tracking.",
+                    rating: 4.7,
+                    reviews: 789,
+                    amazonLink: "https://www.amazon.in/Fitbit-Charge-Advanced-Fitness-Tracker/dp/B09DFHJTF5/"
+                },
+                {
+                    title: "Philips Air Purifier",
+                    price: "₹12,999",
+                    image: "https://picsum.photos/400/320?random=23",
+                    description: "Air purifier with HEPA filter for clean indoor air.",
+                    rating: 4.6,
+                    reviews: 456,
+                    amazonLink: "https://www.amazon.in/Philips-Air-Purifier-HEPA-Filter/dp/B09DFHJTF5/"
+                },
+                {
+                    title: "Yoga Mat Premium",
+                    price: "₹1,999",
+                    image: "https://picsum.photos/400/320?random=24",
+                    description: "Non-slip yoga mat with carrying strap and alignment lines.",
+                    rating: 4.8,
+                    reviews: 234,
+                    amazonLink: "https://www.amazon.in/Premium-Yoga-Mat-Carrying-Strap/dp/B09DFHJTF5/"
+                }
+            ],
+            books: [
+                {
+                    title: "Kindle Paperwhite",
+                    price: "₹13,999",
+                    image: "https://picsum.photos/400/320?random=25",
+                    description: "Waterproof e-reader with built-in light and 8GB storage.",
+                    rating: 4.8,
+                    reviews: 1234,
+                    amazonLink: "https://www.amazon.in/Amazon-Kindle-Paperwhite-Waterproof-Storage/dp/B09DFHJTF5/"
+                },
+                {
+                    title: "Moleskine Classic Notebook",
+                    price: "₹1,999",
+                    image: "https://picsum.photos/400/320?random=26",
+                    description: "Hard cover notebook with premium paper quality.",
+                    rating: 4.7,
+                    reviews: 567,
+                    amazonLink: "https://www.amazon.in/Moleskine-Classic-Notebook-Hard-Cover/dp/B09DFHJTF5/"
+                },
+                {
+                    title: "Faber-Castell Pencil Set",
+                    price: "₹999",
+                    image: "https://picsum.photos/400/320?random=27",
+                    description: "Professional drawing pencil set with 12 different grades.",
+                    rating: 4.6,
+                    reviews: 345,
+                    amazonLink: "https://www.amazon.in/Faber-Castell-Drawing-Pencil-Set/dp/B09DFHJTF5/"
+                }
             ]
         };
 
@@ -1409,6 +2094,189 @@
             // Show categories grid
             document.querySelector('.categories-grid').style.display = 'grid';
         }
+
+        // Auth Modal Functions
+        function openSignupModal() {
+            document.getElementById('signupModal').style.display = 'block';
+            document.getElementById('loginModal').style.display = 'none';
+            document.body.style.overflow = 'hidden';
+        }
+        
+        function closeSignupModal() {
+            document.getElementById('signupModal').style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+        
+        function openLoginModal() {
+            document.getElementById('loginModal').style.display = 'block';
+            document.getElementById('signupModal').style.display = 'none';
+            document.body.style.overflow = 'hidden';
+        }
+        
+        function closeLoginModal() {
+            document.getElementById('loginModal').style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+        
+        function switchToLogin(event) {
+            event.preventDefault();
+            closeSignupModal();
+            openLoginModal();
+        }
+        
+        function switchToSignup(event) {
+            event.preventDefault();
+            closeLoginModal();
+            openSignupModal();
+        }
+        
+        function handleSignup(event) {
+            event.preventDefault();
+            const fullName = document.getElementById('fullName').value;
+            const email = document.getElementById('signupEmail').value;
+            const password = document.getElementById('signupPassword').value;
+            
+            // Add your signup logic here
+            console.log('Signup:', { fullName, email, password });
+            alert('Sign up successful!');
+            closeSignupModal();
+        }
+        
+        function handleLogin(event) {
+            event.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            const rememberMe = document.getElementById('rememberMe').checked;
+            
+            // Add your login logic here
+            console.log('Login:', { email, password, rememberMe });
+            alert('Login successful!');
+            closeLoginModal();
+        }
+        
+        // Close modals when clicking outside
+        document.getElementById('signupModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeSignupModal();
+            }
+        });
+        
+        document.getElementById('loginModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeLoginModal();
+            }
+        });
+
+        // Update the button click handlers
+        document.getElementById('getStartedBtn').addEventListener('click', function() {
+            scrollToGiftFinder();
+        });
+
+        // Make sure the Sign Up button in header works
+        document.querySelector('nav .cta-button').addEventListener('click', function() {
+            openSignupModal();
+        });
+
+        // Update modal functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get Started button
+            document.getElementById('getStartedBtn').addEventListener('click', function() {
+                scrollToGiftFinder();
+            });
+            
+            // Sign Up button in header
+            document.querySelector('nav .cta-button').addEventListener('click', function() {
+                openSignupModal();
+            });
+            
+            // Close buttons
+            document.querySelectorAll('.close-modal').forEach(button => {
+                button.addEventListener('click', function() {
+                    closeSignupModal();
+                    closeLoginModal();
+                });
+            });
+            
+            // Close on outside click
+            document.getElementById('signupModal').addEventListener('click', function(e) {
+                if (e.target === this) {
+                    closeSignupModal();
+                }
+            });
+            
+            document.getElementById('loginModal').addEventListener('click', function(e) {
+                if (e.target === this) {
+                    closeLoginModal();
+                }
+            });
+            
+            // Switch between signup and login
+            document.querySelectorAll('.auth-switch a').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    if (this.textContent.includes('Log In')) {
+                        closeSignupModal();
+                        openLoginModal();
+                    } else {
+                        closeLoginModal();
+                        openSignupModal();
+                    }
+                });
+            });
+        });
+
+        // Add gift icon click animation
+        document.addEventListener('DOMContentLoaded', function() {
+            const giftIcon = document.getElementById('giftIcon');
+            
+            giftIcon.addEventListener('click', function() {
+                this.classList.toggle('active');
+                
+                // Create multiple hearts
+                const rect = giftIcon.getBoundingClientRect();
+                const centerX = rect.left + rect.width / 2;
+                const centerY = rect.top + rect.height / 2;
+                
+                for (let i = 0; i < 8; i++) {
+                    const heart = document.createElement('div');
+                    heart.className = 'heart';
+                    heart.style.position = 'fixed';
+                    heart.style.width = '20px';
+                    heart.style.height = '20px';
+                    heart.style.background = '#FF6B6B';
+                    heart.style.transform = 'rotate(45deg)';
+                    heart.style.zIndex = '1000';
+                    
+                    // Random angle for heart direction
+                    const angle = (i * 45) + Math.random() * 30;
+                    const distance = 100 + Math.random() * 50;
+                    
+                    // Calculate final position
+                    const rad = angle * Math.PI / 180;
+                    const finalX = Math.cos(rad) * distance;
+                    const finalY = Math.sin(rad) * distance;
+                    
+                    // Set initial position
+                    heart.style.left = centerX + 'px';
+                    heart.style.top = centerY + 'px';
+                    
+                    // Set final position using CSS variables
+                    heart.style.setProperty('--tx', finalX + 'px');
+                    heart.style.setProperty('--ty', finalY + 'px');
+                    
+                    // Add to body
+                    document.body.appendChild(heart);
+                    
+                    // Animate heart
+                    heart.style.animation = `popHeart 1s ease-out ${i * 0.1}s forwards`;
+                    
+                    // Remove heart after animation
+                    setTimeout(() => {
+                        heart.remove();
+                    }, 1000 + (i * 100));
+                }
+            });
+        });
     </script>
 </body>
 </html> 
