@@ -1,29 +1,21 @@
 const express = require('express');
-const mysql = require('mysql2');  // Ensure mysql2 is correctly imported
-
-// const jwt = require('jsonwebtoken'); // JWT for token-based authentication //uncomment
-
-// Create an Express app
-const app = express();
-// const PORT = 3000; //uncomment
-
-app.use(express.json());  // Middleware to parse JSON requests
-
-
-//CORS (Cross-Origin Resource Sharing) to allow requests from the frontend.
+const mysql = require('mysql2');  
 const cors = require('cors');
+
+const app = express();
+app.use(express.json());  
 app.use(cors());
 
-
-// MySQL database connection
+// ✅ Use Railway MySQL connection details instead of local MySQL
 const db = mysql.createConnection({
-  host: '192.168.137.207',       // Replace with your actual host (localhost if it's local)
-  user: 'root',    // Replace with your MySQL username
-  password: 'Moba@69420', // Replace with your MySQL password
-  database: 'gift_recommendation'  // Replace with your database name
+  host: 'mysql.railway.internal',
+  user: 'root',
+  password: 'lSxhjCOrUJevgjYrnkRxZnqOBPljqotB',
+  database: 'railway',
+  port: 3306
 });
 
-// Connect to the database
+// ✅ Check if MySQL connection is successful
 db.connect((err) => {
   if (err) {
     console.error('Error connecting to the database:', err);
@@ -32,38 +24,43 @@ db.connect((err) => {
   console.log('Connected to the database!');
 });
 
-// API to fetch all products from the database
+// ✅ Home route to check if server is running
+app.get('/', (req, res) => {
+  res.send('Server is running!');
+});
+
+// ✅ API to fetch all products
 app.get('/products', (req, res) => {
   db.query('SELECT * FROM gifts', (err, results) => {
     if (err) {
       console.error('Error fetching products:', err);
       res.status(500).json({ error: 'Failed to fetch products' });
     } else {
-      res.json(results);  // Sends the products as a JSON response
+      res.json(results);
     }
   });
 });
 
-// API to get product recommendations based on user input
+// ✅ API to get product recommendations
 app.post('/recommendations', (req, res) => {
-  const { occasion, budget } = req.body;  // Extracting user input from request body
-
-  db.query('SELECT * FROM products WHERE price <= ?', [budget], (err, results) => {
+  const { occasion, budget } = req.body;
+  
+  db.query('SELECT * FROM gifts WHERE price <= ?', [budget], (err, results) => {
     if (err) {
       console.error('Error fetching recommendations:', err);
       res.status(500).json({ error: 'Failed to fetch recommendations' });
     } else {
-      res.json(results);  // Sends the recommended products as a JSON response
+      res.json(results);
     }
   });
 });
 
-//Pagination
-app.get('/products', (req, res) => {
-  const limit = parseInt(req.query.limit) || 10;  // Limit to 10 products per page by default
-  const offset = parseInt(req.query.offset) || 0; // Offset for pagination
-  
-  db.query('SELECT * FROM products LIMIT ? OFFSET ?', [limit, offset], (err, results) => {
+// ✅ API to fetch products with pagination
+app.get('/products_paginated', (req, res) => {
+  const limit = parseInt(req.query.limit) || 10;
+  const offset = parseInt(req.query.offset) || 0;
+
+  db.query('SELECT * FROM gifts LIMIT ? OFFSET ?', [limit, offset], (err, results) => {
     if (err) {
       res.status(500).json({ error: 'Failed to fetch products' });
     } else {
@@ -72,10 +69,8 @@ app.get('/products', (req, res) => {
   });
 });
 
-
-
-
-// Start the Express server
-app.listen(3000, () => {
-  console.log('Server is running on port 3000');
+// ✅ Start the Express server
+const PORT = process.env.PORT || 3000; // Allows Railway to set the port dynamically
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
 });
