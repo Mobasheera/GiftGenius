@@ -1,6 +1,9 @@
 {
   "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
     "express": "^4.21.2",
+    "jsonwebtoken": "^9.0.2",
     "mysql2": "^3.14.0"
   },
   "name": "gift_test",
@@ -21,6 +24,5 @@
   "bugs": {
     "url": "https://github.com/Mobasheera/Gift_Test/issues"
   },
-  "homepage": "https://github.com/Mobasheera/Gift_Test#readme",
-  "devDependencies": {}
+  "homepage": "https://github.com/Mobasheera/Gift_Test#readme"
 }

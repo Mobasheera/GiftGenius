@@ -1,9 +1,19 @@
 const express = require('express');
 const mysql = require('mysql2');  // Ensure mysql2 is correctly imported
 
+// const jwt = require('jsonwebtoken'); // JWT for token-based authentication //uncomment
+
 // Create an Express app
 const app = express();
+// const PORT = 3000; //uncomment
+
 app.use(express.json());  // Middleware to parse JSON requests
+
+
+//CORS (Cross-Origin Resource Sharing) to allow requests from the frontend.
+const cors = require('cors');
+app.use(cors());
+
 
 // MySQL database connection
 const db = mysql.createConnection({
@@ -61,6 +71,8 @@ app.get('/products', (req, res) => {
     }
   });
 });
+
+
 
 
 // Start the Express server
