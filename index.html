@@ -147,7 +147,490 @@
             </section>
         </div>
     </section>
-	<div class="gift-image">
+
+    <!-- Categories Section -->
+    <section class="page-section" id="categories">
+        <div class="container">
+            <h1 style="text-align: center; margin: 40px 0;">Gift Categories</h1>
+            <div class="categories-grid">
+                <div class="category-card">
+                    <div class="category-image" style="background-image: url('https://picsum.photos/400/300?random=1')"></div>
+                    <div class="category-info">
+                        <h3 class="category-title">Tech Gadgets</h3>
+                        <p class="category-description">Latest gadgets and tech accessories for the tech-savvy.</p>
+                        <a href="#" class="view-button" onclick="showCategoryProducts('tech')">Explore</a>
+                    </div>
+                </div>
+                <div class="category-card">
+                    <div class="category-image" style="background-image: url('https://picsum.photos/400/300?random=2')"></div>
+                    <div class="category-info">
+                        <h3 class="category-title">Home & Living</h3>
+                        <p class="category-description">Beautiful home decor and lifestyle products.</p>
+                        <a href="#" class="view-button" onclick="showCategoryProducts('home')">Explore</a>
+                    </div>
+                </div>
+                <div class="category-card">
+                    <div class="category-image" style="background-image: url('https://picsum.photos/400/300?random=3')"></div>
+                    <div class="category-info">
+                        <h3 class="category-title">Fashion & Accessories</h3>
+                        <p class="category-description">Trendy fashion items and stylish accessories.</p>
+                        <a href="#" class="view-button" onclick="showCategoryProducts('fashion')">Explore</a>
+                    </div>
+                </div>
+                <div class="category-card">
+                    <div class="category-image" style="background-image: url('https://picsum.photos/400/300?random=4')"></div>
+                    <div class="category-info">
+                        <h3 class="category-title">Sports & Outdoors</h3>
+                        <p class="category-description">Equipment and gear for sports enthusiasts.</p>
+                        <a href="#" class="view-button" onclick="showCategoryProducts('sports')">Explore</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Category Products Section -->
+            <div id="category-products" style="display: none;">
+                <div class="category-header" style="display: flex; justify-content: space-between; align-items: center; margin: 40px 0;">
+                    <h2 id="category-title"></h2>
+                    <button class="cta-button" onclick="hideCategoryProducts()">Back to Categories</button>
+                </div>
+                <div class="results-grid" id="category-products-grid">
+                    <!-- Products will be dynamically added here -->
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section class="page-section" id="how-it-works">
+        <div class="container">
+            <h1 style="text-align: center; margin: 40px 0;">How GiftGenius Works</h1>
+            <div class="steps-container">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h3 class="step-title">Tell Us About the Recipient</h3>
+                        <p class="step-description">Fill out our simple form with details about the person you're shopping for, including their interests, age, and the occasion.</p>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h3 class="step-title">Set Your Budget</h3>
+                        <p class="step-description">Choose your preferred price range, and we'll ensure all recommendations fit within your budget.</p>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h3 class="step-title">Get Personalized Recommendations</h3>
+                        <p class="step-description">Our AI analyzes the information and provides a curated list of gift ideas that match the recipient's interests and your budget.</p>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <div class="step-content">
+                        <h3 class="step-title">Choose and Purchase</h3>
+                        <p class="step-description">Browse through the recommendations, read reviews, and select the perfect gift. We'll guide you to trusted retailers where you can make your purchase.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Us Section -->
+    <section class="page-section" id="about">
+        <div class="container">
+            <h1 style="text-align: center; margin: 40px 0;">About GiftGenius</h1>
+            <div class="about-content">
+                <div class="about-section">
+                    <h2>Our Mission</h2>
+                    <p>At GiftGenius, we believe that finding the perfect gift should be an enjoyable experience, not a stressful one. Our mission is to help people discover thoughtful, personalized gifts that create lasting memories and strengthen relationships.</p>
+                </div>
+                <div class="about-section">
+                    <h2>Our Story</h2>
+                    <p>Founded in 2024, GiftGenius emerged from a simple observation: people often struggle to find meaningful gifts for their loved ones. We combined cutting-edge AI technology with human insight to create a platform that makes gift-giving easier and more enjoyable.</p>
+                </div>
+                <div class="about-section">
+                    <h2>Our Team</h2>
+                    <div class="team-grid">
+                        <div class="team-member">
+                            <img src="https://picsum.photos/150/150?random=1" alt="Team Member">
+                            <h3>Avinash Mishra</h3>
+                            <p>Team Leader</p>
+                        </div>
+                        <div class="team-member">
+                            <img src="https://picsum.photos/150/150?random=2" alt="Team Member">
+                            <h3>Mobashshir</h3>
+                            <p>Member 1</p>
+                        </div>
+                        <div class="team-member">
+                            <img src="https://picsum.photos/150/150?random=3" alt="Team Member">
+                            <h3>Gyanendra Dubey</h3>
+                            <p>Member 2</p>
+                        </div>
+                        <div class="team-member">
+                            <img src="https://picsum.photos/150/150?random=4" alt="Team Member">
+                            <h3>Shashwat Shukla</h3>
+                            <p>Member 3</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-col">
+                    <h3>GiftGenius</h3>
+                    <p>Using AI to connect people with thoughtful, personalized gifts that create lasting memories.</p>
+                </div>
+                <div class="footer-col">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="#">Home</a></li>
+                        <li><a href="#">About Us</a></li>
+                        <li><a href="#">How It Works</a></li>
+                        <li><a href="#">Gift Categories</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h3>Support</h3>
+                    <ul>
+                        <li><a href="#">Contact Us</a></li>
+                        <li><a href="#">FAQ</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Terms of Service</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h3>Connect With Us</h3>
+                    <ul>
+                        <li><a href="#">Facebook</a></li>
+                        <li><a href="#">Instagram</a></li>
+                        <li><a href="#">Twitter</a></li>
+                        <li><a href="#">Pinterest</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                &copy; 2025 GiftGenius. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Price range slider
+        const priceRange = document.getElementById('price-range');
+        const priceValue = document.getElementById('price-value');
+        
+        priceRange.addEventListener('input', function() {
+            priceValue.textContent = this.value;
+        });
+        
+        // Interest tags selection
+        const interestTags = document.querySelectorAll('.interest-tag');
+        
+        interestTags.forEach(tag => {
+            tag.addEventListener('click', function() {
+                this.classList.toggle('selected');
+            });
+        });
+        
+        // Form submission
+        const giftForm = document.getElementById('gift-form');
+        const loadingSpinner = document.querySelector('.loading');
+        const resultsSection = document.getElementById('results-section');
+        
+        giftForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Show loading spinner
+            loadingSpinner.style.display = 'block';
+            resultsSection.style.display = 'none';
+            
+            // Simulate API call with timeout
+            setTimeout(function() {
+                loadingSpinner.style.display = 'none';
+                
+                // Generate sample gift results
+                generateSampleResults();
+                
+                // Show results section
+                resultsSection.style.display = 'block';
+                
+                // Scroll to results
+                resultsSection.scrollIntoView({ behavior: 'smooth' });
+            }, 2000);
+        });
+        
+        function generateSampleResults() {
+            const resultsGrid = document.querySelector('.results-grid');
+            resultsGrid.innerHTML = '';
+            
+            const selectedTags = document.querySelectorAll('.interest-tag.selected');
+            const interests = Array.from(selectedTags).map(tag => tag.textContent);
+            const budget = document.getElementById('price-range').value;
+            const occasion = document.getElementById('occasion').value;
+            const ageRange = document.getElementById('age-range').value;
+            
+            // Sample gift data based on form inputs
+            const sampleGifts = [
+                {
+                    title: "Sony WH-1000XM4 Wireless Headphones",
+                    price: "₹24,990",
+                    image: "https://picsum.photos/400/320",
+                    description: "Industry-leading noise cancellation with Dual Noise Sensor technology.",
+                    rating: 4.8,
+                    reviews: 2453,
+                    amazonLink: "https://www.amazon.in/Sony-WH-1000XM4-Cancelling-Headphones-Phantom/dp/B0863TXGM3/"
+                },
+                {
+                    title: "Starbucks House Blend Coffee",
+                    price: "₹1,499",
+                    image: "https://picsum.photos/400/320",
+                    description: "Premium Arabica coffee beans, medium roast, 250g.",
+                    rating: 4.7,
+                    reviews: 1822,
+                    amazonLink: "https://www.amazon.in/Starbucks-House-Blend-Coffee-250g/dp/B07P8QZ6KX/"
+                },
+                {
+                    title: "Personalized Star Map",
+                    price: "₹2,999",
+                    image: "https://picsum.photos/400/320",
+                    description: "Custom star map showing the night sky from any date and location.",
+                    rating: 4.9,
+                    reviews: 3128,
+                    amazonLink: "https://www.amazon.in/Personalized-Constellation-Star-Map-Print/dp/B08L5R1C3N/"
+                },
+                {
+                    title: "URBAN PLANTZ Hydroponic Plant Growing System",
+                    price: "₹1,499",
+                    image: "https://picsum.photos/400/320",
+                    description: "Self-watering indoor garden with LED grow lights.",
+                    rating: 4.6,
+                    reviews: 956,
+                    amazonLink: "https://www.amazon.in/URBAN-PLANTZ-Hydroponic-Plant-Growing/dp/B08L5R1C3N/"
+                },
+                {
+                    title: "Victrola Vintage 3-Speed Bluetooth Record Player",
+                    price: "₹5,999",
+                    image: "https://picsum.photos/400/320",
+                    description: "Modern record player with vintage design and built-in speakers.",
+                    rating: 4.5,
+                    reviews: 1254,
+                    amazonLink: "https://www.amazon.in/Victrola-Vintage-3-Speed-Bluetooth-Speakers/dp/B07P8QZ6KX/"
+                },
+                {
+                    title: "Leather Journal Writing Notebook",
+                    price: "₹1,299",
+                    image: "https://picsum.photos/400/320",
+                    description: "Premium leather-bound journal with 240 pages.",
+                    rating: 4.7,
+                    reviews: 892,
+                    amazonLink: "https://www.amazon.in/Leather-Journal-Writing-Notebook-Notepad/dp/B08L5R1C3N/"
+                }
+            ];
+            
+            // Render gift cards
+            sampleGifts.forEach(gift => {
+                const giftCard = document.createElement('div');
+                giftCard.className = 'gift-card';
+                giftCard.innerHTML = `
+                    <div class="gift-image">
+                        <img src="${gift.image}" alt="${gift.title}">
+                    </div>
+                    <div class="gift-info">
+                        <h3 class="gift-title">${gift.title}</h3>
+                        <div class="gift-price">${gift.price}</div>
+                        <p class="gift-description">${gift.description}</p>
+                        <div class="gift-meta">
+                            <div class="popularity">
+                                <span class="stars">★★★★★</span>
+                                <span>${gift.rating} (${gift.reviews})</span>
+                            </div>
+                        </div>
+                        <a href="${gift.amazonLink}" target="_blank" class="amazon-button">Buy on Amazon</a>
+                    </div>
+                `;
+                resultsGrid.appendChild(giftCard);
+            });
+        }
+
+        // Navigation
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetPage = this.getAttribute('data-page');
+                navigateToPage(targetPage);
+            });
+        });
+
+        function navigateToPage(pageId) {
+            // Hide all sections
+            document.querySelectorAll('.page-section').forEach(section => {
+                section.classList.remove('active');
+            });
+
+            // Show target section
+            document.getElementById(pageId).classList.add('active');
+
+            // Update active nav link
+            document.querySelectorAll('.nav-links a').forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('data-page') === pageId) {
+                    link.classList.add('active');
+                }
+            });
+        }
+
+        function scrollToGiftFinder() {
+            document.querySelector('.gift-finder').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Category Products Data
+        const categoryProducts = {
+            tech: [
+                {
+                    title: "Apple Watch Series 8",
+                    price: "₹41,999",
+                    image: "https://picsum.photos/400/320?random=10",
+                    description: "Advanced smartwatch with health tracking and notifications.",
+                    rating: 4.8,
+                    reviews: 1234,
+                    amazonLink: "https://www.amazon.in/Apple-Watch-Space-Grey-Aluminium/dp/B0BDJ6ZMCC/"
+                },
+                {
+                    title: "Apple AirPods Pro",
+                    price: "₹24,999",
+                    image: "https://picsum.photos/400/320?random=11",
+                    description: "Active noise cancellation and spatial audio.",
+                    rating: 4.6,
+                    reviews: 856,
+                    amazonLink: "https://www.amazon.in/Apple-AirPods-Pro-Active-Cancellation/dp/B0BDJ6ZMCC/"
+                },
+                {
+                    title: "Mi Power Bank 20000mAh",
+                    price: "₹1,999",
+                    image: "https://picsum.photos/400/320?random=12",
+                    description: "Fast charging power bank with dual USB ports.",
+                    rating: 4.7,
+                    reviews: 654,
+                    amazonLink: "https://www.amazon.in/Mi-Power-Bank-20000mAh-Black/dp/B0BDJ6ZMCC/"
+                }
+            ],
+            home: [
+                {
+                    title: "Philips Smart LED Bulb",
+                    price: "₹1,999",
+                    image: "https://picsum.photos/400/320?random=13",
+                    description: "WiFi-enabled LED bulb with 16 million colors.",
+                    rating: 4.5,
+                    reviews: 789,
+                    amazonLink: "https://www.amazon.in/Philips-WiFi-Enabled-Color-Changing-Bulb/dp/B0BDJ6ZMCC/"
+                },
+                {
+                    title: "Morphy Richards Coffee Maker",
+                    price: "₹4,999",
+                    image: "https://picsum.photos/400/320?random=14",
+                    description: "Programmable coffee maker with thermal carafe.",
+                    rating: 4.7,
+                    reviews: 432,
+                    amazonLink: "https://www.amazon.in/Morphy-Richards-Coffee-Maker-Black/dp/B0BDJ6ZMCC/"
+                },
+                {
+                    title: "Urban Ladder Throw Blanket",
+                    price: "₹1,999",
+                    image: "https://picsum.photos/400/320?random=15",
+                    description: "Soft and cozy throw blanket for any room.",
+                    rating: 4.6,
+                    reviews: 567,
+                    amazonLink: "https://www.amazon.in/Urban-Ladder-Throw-Blanket-Grey/dp/B0BDJ6ZMCC/"
+                }
+            ],
+            fashion: [
+                {
+                    title: "Urban Forest Leather Wallet",
+                    price: "₹1,999",
+                    image: "https://picsum.photos/400/320?random=16",
+                    description: "Genuine leather wallet with multiple card slots.",
+                    rating: 4.8,
+                    reviews: 234,
+                    amazonLink: "https://www.amazon.in/Urban-Forest-Leather-Wallet-Brown/dp/B0BDJ6ZMCC/"
+                },
+                {
+                    title: "Ray-Ban Aviator Sunglasses",
+                    price: "₹15,999",
+                    image: "https://picsum.photos/400/320?random=17",
+                    description: "Classic aviator style with UV protection.",
+                    rating: 4.7,
+                    reviews: 345,
+                    amazonLink: "https://www.amazon.in/Ray-Ban-Aviator-Sunglasses-Black/dp/B0BDJ6ZMCC/"
+                },
+                {
+                    title: "Allen Solly Silk Scarf",
+                    price: "₹1,999",
+                    image: "https://picsum.photos/400/320?random=18",
+                    description: "Elegant silk scarf with unique pattern.",
+                    rating: 4.6,
+                    reviews: 123,
+                    amazonLink: "https://www.amazon.in/Allen-Solly-Silk-Scarf-Purple/dp/B0BDJ6ZMCC/"
+                }
+            ],
+            sports: [
+                {
+                    title: "Decathlon Yoga Mat",
+                    price: "₹1,499",
+                    image: "https://picsum.photos/400/320?random=19",
+                    description: "Non-slip yoga mat with carrying strap.",
+                    rating: 4.7,
+                    reviews: 456,
+                    amazonLink: "https://www.amazon.in/Anti-Slip-Yoga-Mat-Carrying-Strap/dp/B07P8QZ6KX/"
+                },
+                {
+                    title: "Water Bottle",
+                    price: "₹2,499",
+                    image: "https://picsum.photos/400/320?random=20",
+                    description: "Insulated water bottle for sports.",
+                    rating: 4.8,
+                    reviews: 678,
+                    amazonLink: "https://www.amazon.in/Insulated-Water-Bottle-Sports-1000ml/dp/B08L5R1C3N/"
+                },
+                {
+                    title: "Sports Watch",
+                    price: "₹8,999",
+                    image: "https://picsum.photos/400/320?random=21",
+                    description: "Water-resistant sports watch with activity tracking.",
+                    rating: 4.6,
+                    reviews: 234,
+                    amazonLink: "https://www.amazon.in/Fitbit-Smartwatch-Activity-Tracking-Compatible/dp/B07P8QZ6KX/"
+                }
+            ]
+        };
+
+        function showCategoryProducts(category) {
+            // Hide categories grid
+            document.querySelector('.categories-grid').style.display = 'none';
+            
+            // Show products section
+            const productsSection = document.getElementById('category-products');
+            productsSection.style.display = 'block';
+            
+            // Set category title
+            const categoryTitle = document.getElementById('category-title');
+            categoryTitle.textContent = document.querySelector(`[onclick="showCategoryProducts('${category}')"]`).closest('.category-card').querySelector('.category-title').textContent;
+            
+            // Get products grid
+            const productsGrid = document.getElementById('category-products-grid');
+            productsGrid.innerHTML = '';
+            
+            // Add products
+            categoryProducts[category].forEach(product => {
+                const productCard = document.createElement('div');
+                productCard.className = 'gift-card';
+                productCard.innerHTML = `
+                    <div class="gift-image">
                         <img src="${product.image}" alt="${product.title}">
                     </div>
                     <div class="gift-info">
