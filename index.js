@@ -9,7 +9,7 @@ app.use(express.json());  // Middleware to parse JSON requests
 const db = mysql.createConnection({
   host: '192.168.137.207',       // Replace with your actual host (localhost if it's local)
   user: 'root',    // Replace with your MySQL username
-  password: 'Moba@69420d', // Replace with your MySQL password
+  password: 'Moba@69420', // Replace with your MySQL password
   database: 'gift_recommendation'  // Replace with your database name
 });
 
@@ -24,7 +24,7 @@ db.connect((err) => {
 
 // API to fetch all products from the database
 app.get('/products', (req, res) => {
-  db.query('SELECT * FROM products', (err, results) => {
+  db.query('SELECT * FROM gifts', (err, results) => {
     if (err) {
       console.error('Error fetching products:', err);
       res.status(500).json({ error: 'Failed to fetch products' });
