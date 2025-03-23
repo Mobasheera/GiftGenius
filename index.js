@@ -6,6 +6,9 @@ const app = express();
 app.use(express.json());  
 app.use(cors());
 
+// ✅ Debug log to check if the server starts correctly
+console.log('✅ Debug: Server is starting...');
+
 // ✅ Middleware to log incoming requests (for debugging)
 app.use((req, res, next) => {
   console.log(`🔍 Received ${req.method} request on ${req.url}`);
@@ -78,4 +81,5 @@ app.get('/products_paginated', (req, res) => {
 const PORT = process.env.PORT || 3000;  // Ensures Railway assigns the correct port
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`✅ Server is running on port ${PORT}`);
+  console.log('✅ Debug: Server should now be running.');
 });
