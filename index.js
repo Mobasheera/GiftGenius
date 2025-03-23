@@ -78,7 +78,7 @@ app.get('/products_paginated', (req, res) => {
 });
 
 // ✅ Start the Express server
-const PORT = process.env.PORT || 3000;  // Ensures Railway assigns the correct port
+const PORT = 3000;  // Force port 3000 (since Railway expects this)
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`✅ Server is running on port ${PORT}`);
   console.log('✅ Debug: Server should now be running.');
