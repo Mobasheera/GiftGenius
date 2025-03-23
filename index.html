@@ -3,6 +3,11 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="icon"
+      type="image/png"
+      href="https://i.postimg.cc/8kLM0yFt/DALL-E-2025-03-21-14-52-09-A-modern-and-stylish-gift-box-icon-designed-with-a-warm-pink-color-sche.png"
+    />
     <title>GiftGenius | Smart Gift Recommendations</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <style>
@@ -2831,19 +2836,19 @@
         const signupModal = document.getElementById("signupModal");
         const loginModal = document.getElementById("loginModal");
         const signupForm = signupModal.querySelector(".modal");
-        
+
         signupForm.classList.add("slide-out");
-        
+
         setTimeout(() => {
           signupModal.style.display = "none";
           loginModal.style.display = "block";
           const loginForm = loginModal.querySelector(".modal");
           loginForm.classList.add("slide-in");
-          
+
           // Force reflow
           void loginModal.offsetWidth;
           loginModal.classList.add("show");
-          
+
           setTimeout(() => {
             loginForm.classList.remove("slide-in");
             signupForm.classList.remove("slide-out");
@@ -2856,19 +2861,19 @@
         const loginModal = document.getElementById("loginModal");
         const signupModal = document.getElementById("signupModal");
         const loginForm = loginModal.querySelector(".modal");
-        
+
         loginForm.classList.add("slide-out");
-        
+
         setTimeout(() => {
           loginModal.style.display = "none";
           signupModal.style.display = "block";
           const signupForm = signupModal.querySelector(".modal");
           signupForm.classList.add("slide-in");
-          
+
           // Force reflow
           void signupModal.offsetWidth;
           signupModal.classList.add("show");
-          
+
           setTimeout(() => {
             signupForm.classList.remove("slide-in");
             loginForm.classList.remove("slide-out");
