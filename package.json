@@ -8,11 +8,11 @@
   },
   "name": "gift_test",
   "version": "1.0.0",
-  "description": "testing for Giftgenius",
-  "main": "db.js",
+  "description": "Testing for GiftGenius",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "start": "node index.js"
   },
   "repository": {
     "type": "git",
