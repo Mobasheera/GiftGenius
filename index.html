@@ -1,2035 +1,2471 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>GiftGenius | Smart Gift Recommendations</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <style>
-        :root {
-            --primary: #FFB6C1;
-            --primary-light: #FFD1DC;
-            --secondary: #5C5470;
-            --text: #5C5470;
-            --light-bg: #FFF0F3;
-            --white: #ffffff;
-            --gray: #F0E6E8;
-            --dark-gray: #8E8E8E;
-            --warm-pink: #FFE4E8;
-            --soft-pink: #FFF5F7;
+      :root {
+        --primary: #ffb6c1;
+        --primary-light: #ffd1dc;
+        --secondary: #5c5470;
+        --text: #5c5470;
+        --light-bg: #fff0f3;
+        --white: #ffffff;
+        --gray: #f0e6e8;
+        --dark-gray: #8e8e8e;
+        --warm-pink: #ffe4e8;
+        --soft-pink: #fff5f7;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      }
+
+      body {
+        background: linear-gradient(
+          135deg,
+          var(--warm-pink) 0%,
+          var(--soft-pink) 100%
+        );
+        color: var(--text);
+        line-height: 1.6;
+        position: relative;
+        overflow-x: hidden;
+      }
+
+      body::before {
+        content: "";
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: url('data:image/svg+xml,<svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><rect width="1" height="1" fill="%23ffffff" opacity="0.1"/></svg>');
+        opacity: 0.5;
+        z-index: -1;
+        pointer-events: none;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+      }
+
+      /* Header Styles */
+      header {
+        background-color: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        box-shadow: 0 4px 20px rgba(92, 84, 112, 0.05);
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      nav {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px 0;
+      }
+
+      .logo {
+        display: flex;
+        align-items: center;
+        font-size: 28px;
+        font-weight: 800;
+        color: var(--primary);
+        text-decoration: none;
+        transition: all 0.3s ease;
+        padding: 8px 15px;
+        border-radius: 12px;
+        background: linear-gradient(
+          135deg,
+          rgba(255, 182, 193, 0.1),
+          rgba(92, 84, 112, 0.1)
+        );
+        position: relative;
+        overflow: hidden;
+      }
+
+      .logo::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          45deg,
+          transparent,
+          rgba(255, 255, 255, 0.2),
+          transparent
+        );
+        transform: translateX(-100%);
+        transition: transform 0.6s;
+      }
+
+      .logo:hover::before {
+        transform: translateX(100%);
+      }
+
+      .logo:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(255, 182, 193, 0.2);
+      }
+
+      .logo i {
+        margin-right: 12px;
+        font-size: 32px;
+        background: linear-gradient(45deg, var(--primary), var(--secondary));
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        position: relative;
+      }
+
+      .logo span {
+        background: linear-gradient(45deg, var(--primary), var(--secondary));
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        position: relative;
+        letter-spacing: -0.5px;
+      }
+
+      .nav-links {
+        display: flex;
+        list-style: none;
+        gap: 30px;
+        margin: 0;
+        padding: 0;
+        margin-right: 20px;
+      }
+
+      .nav-links a {
+        text-decoration: none;
+        color: var(--text);
+        font-weight: 500;
+        font-size: 16px;
+        padding: 8px 0;
+        position: relative;
+        transition: color 0.3s ease;
+      }
+
+      .nav-links a::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 0;
+        height: 2px;
+        background: linear-gradient(45deg, var(--primary), var(--secondary));
+        transition: width 0.3s ease;
+      }
+
+      .nav-links a:hover {
+        color: var(--primary);
+      }
+
+      .nav-links a:hover::after {
+        width: 100%;
+      }
+
+      .nav-links a.active {
+        color: var(--primary);
+      }
+
+      .nav-links a.active::after {
+        width: 100%;
+      }
+
+      .cta-button {
+        background: linear-gradient(
+          45deg,
+          var(--primary),
+          var(--primary-light)
+        );
+        color: var(--secondary);
+        border: none;
+        padding: 12px 30px;
+        border-radius: 25px;
+        font-weight: 600;
+        font-size: 16px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 4px 15px rgba(255, 182, 193, 0.2);
+      }
+
+      .cta-button::before {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 0;
+        height: 0;
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 50%;
+        transform: translate(-50%, -50%);
+        transition: width 0.6s, height 0.6s;
+      }
+
+      .cta-button:hover::before {
+        width: 300%;
+        height: 300%;
+      }
+
+      .cta-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(255, 182, 193, 0.3);
+      }
+
+      /* Hero Section */
+      .hero {
+        padding: 80px 0;
+        background: linear-gradient(
+          135deg,
+          var(--soft-pink) 0%,
+          var(--white) 100%
+        );
+        border-radius: 0 0 30px 30px;
+        margin-bottom: 60px;
+        position: relative;
+        overflow: hidden;
+        min-height: 600px;
+        display: flex;
+        align-items: center;
+      }
+
+      .hero::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(
+          45deg,
+          rgba(255, 182, 193, 0.1),
+          rgba(255, 228, 232, 0.2)
+        );
+        animation: gradientBG 15s ease infinite;
+        z-index: 1;
+      }
+
+      .hero::after {
+        content: "";
+        position: absolute;
+        width: 300px;
+        height: 300px;
+        background: radial-gradient(
+          circle,
+          var(--primary-light) 0%,
+          transparent 70%
+        );
+        border-radius: 50%;
+        top: -150px;
+        right: -150px;
+        opacity: 0.3;
+        animation: pulse 8s ease-in-out infinite;
+      }
+
+      .hero .container {
+        position: relative;
+        z-index: 2;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 40px;
+      }
+
+      .hero-content {
+        flex: 1;
+        text-align: left;
+        animation: fadeInLeft 1s ease-out;
+      }
+
+      .hero-image {
+        flex: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+        animation: fadeInRight 1s ease-out;
+        background: transparent;
+        padding: 20px;
+      }
+
+      .hero-image img {
+        max-width: 100%;
+        height: auto;
+        filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.1));
+        animation: float 6s ease-in-out infinite;
+      }
+
+      .hero-image::before {
+        content: "";
+        position: absolute;
+        width: 200px;
+        height: 200px;
+        background: linear-gradient(
+          45deg,
+          var(--primary-light),
+          var(--secondary)
+        );
+        border-radius: 50%;
+        filter: blur(50px);
+        opacity: 0.3;
+        z-index: -1;
+        animation: pulse 4s ease-in-out infinite;
+      }
+
+      .hero h1 {
+        font-size: 48px;
+        font-weight: 800;
+        margin-bottom: 20px;
+        color: var(--text);
+        background: linear-gradient(45deg, var(--primary), var(--secondary));
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        animation: gradient 8s ease infinite;
+        text-align: left;
+        position: relative;
+        display: inline-block;
+      }
+
+      .hero h1::after {
+        content: "";
+        position: absolute;
+        bottom: -5px;
+        left: 0;
+        width: 100%;
+        height: 3px;
+        background: linear-gradient(45deg, var(--primary), var(--secondary));
+        transform: scaleX(0);
+        transform-origin: right;
+        transition: transform 0.5s ease;
+      }
+
+      .hero h1:hover::after {
+        transform: scaleX(1);
+        transform-origin: left;
+      }
+
+      .hero p {
+        font-size: 18px;
+        max-width: 600px;
+        margin: 0 auto 40px;
+        color: var(--dark-gray);
+        line-height: 1.8;
+        animation: fadeInUp 1s ease-out 0.3s both;
+      }
+
+      .hero .cta-button {
+        animation: fadeInUp 1s ease-out 0.6s both;
+        position: relative;
+        overflow: hidden;
+        z-index: 1;
+      }
+
+      .hero .cta-button::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 255, 255, 0.2),
+          transparent
+        );
+        transition: 0.5s;
+        z-index: -1;
+      }
+
+      .hero .cta-button:hover::before {
+        left: 100%;
+      }
+
+      @keyframes gradientBG {
+        0% {
+          background-position: 0% 50%;
         }
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        50% {
+          background-position: 100% 50%;
         }
-        
-        body {
-            background: linear-gradient(135deg, var(--warm-pink) 0%, var(--soft-pink) 100%);
-            color: var(--text);
-            line-height: 1.6;
-            position: relative;
-            overflow-x: hidden;
+        100% {
+          background-position: 0% 50%;
         }
-        
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: url('data:image/svg+xml,<svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><rect width="1" height="1" fill="%23ffffff" opacity="0.1"/></svg>');
-            opacity: 0.5;
-            z-index: -1;
-            pointer-events: none;
+      }
+
+      @keyframes fadeInLeft {
+        from {
+          opacity: 0;
+          transform: translateX(-50px);
         }
-        
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
+        to {
+          opacity: 1;
+          transform: translateX(0);
         }
-        
-        /* Header Styles */
-        header {
-            background-color: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            box-shadow: 0 4px 20px rgba(92, 84, 112, 0.05);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      @keyframes fadeInRight {
+        from {
+          opacity: 0;
+          transform: translateX(50px);
         }
-        
-        nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px 0;
+        to {
+          opacity: 1;
+          transform: translateX(0);
         }
-        
-        .logo {
-            display: flex;
-            align-items: center;
-            font-size: 28px;
-            font-weight: 800;
-            color: var(--primary);
-            text-decoration: none;
-            transition: all 0.3s ease;
-            padding: 8px 15px;
-            border-radius: 12px;
-            background: linear-gradient(135deg, rgba(255, 182, 193, 0.1), rgba(92, 84, 112, 0.1));
-            position: relative;
-            overflow: hidden;
+      }
+
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
         }
-        
-        .logo::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-            transform: translateX(-100%);
-            transition: transform 0.6s;
+        to {
+          opacity: 1;
+          transform: translateY(0);
         }
-        
-        .logo:hover::before {
-            transform: translateX(100%);
+      }
+
+      @keyframes float {
+        0% {
+          transform: translateY(0) scale(1);
         }
-        
-        .logo:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(255, 182, 193, 0.2);
+        50% {
+          transform: translateY(-20px) scale(1.05);
         }
-        
-        .logo i {
-            margin-right: 12px;
-            font-size: 32px;
-            background: linear-gradient(45deg, var(--primary), var(--secondary));
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            position: relative;
+        100% {
+          transform: translateY(0) scale(1);
         }
-        
-        .logo span {
-            background: linear-gradient(45deg, var(--primary), var(--secondary));
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            position: relative;
-            letter-spacing: -0.5px;
+      }
+
+      @keyframes pulse {
+        0% {
+          transform: scale(1);
+          opacity: 0.3;
         }
-        
-        .nav-links {
-            display: flex;
-            list-style: none;
-            gap: 30px;
-            margin: 0;
-            padding: 0;
-            margin-right: 20px;
+        50% {
+          transform: scale(1.2);
+          opacity: 0.2;
         }
-        
-        .nav-links a {
-            text-decoration: none;
-            color: var(--text);
-            font-weight: 500;
-            font-size: 16px;
-            padding: 8px 0;
-            position: relative;
-            transition: color 0.3s ease;
+        100% {
+          transform: scale(1);
+          opacity: 0.3;
         }
-        
-        .nav-links a::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background: linear-gradient(45deg, var(--primary), var(--secondary));
-            transition: width 0.3s ease;
+      }
+
+      /* Gift Finder Form */
+      .gift-finder {
+        background-color: var(--white);
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(92, 84, 112, 0.05);
+        padding: 40px;
+        margin: 0 auto 60px;
+        max-width: 800px;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+      }
+
+      .gift-finder h2 {
+        font-size: 28px;
+        margin-bottom: 30px;
+        text-align: center;
+      }
+
+      .form-group {
+        margin-bottom: 25px;
+      }
+
+      .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 500;
+      }
+
+      .form-control {
+        width: 100%;
+        padding: 15px;
+        border: 2px solid var(--gray);
+        border-radius: 15px;
+        font-size: 16px;
+        transition: border-color 0.3s;
+      }
+
+      .form-control:focus {
+        outline: none;
+        border-color: var(--primary-light);
+        box-shadow: 0 0 0 3px rgba(255, 182, 193, 0.2);
+      }
+
+      .form-row {
+        display: flex;
+        gap: 20px;
+      }
+
+      .form-row .form-group {
+        flex: 1;
+      }
+
+      .tags-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 15px;
+      }
+
+      .interest-tag {
+        background-color: var(--light-bg);
+        border: 1px solid var(--primary-light);
+        color: var(--secondary);
+        border-radius: 25px;
+        padding: 6px 15px;
+        font-size: 14px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .interest-tag::before {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 0;
+        height: 0;
+        background: rgba(255, 182, 193, 0.1);
+        border-radius: 50%;
+        transform: translate(-50%, -50%);
+        transition: width 0.3s, height 0.3s;
+      }
+
+      .interest-tag:hover::before {
+        width: 200%;
+        height: 200%;
+      }
+
+      .interest-tag.selected {
+        background-color: var(--primary-light);
+        border-color: var(--primary);
+        color: var(--secondary);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(92, 84, 112, 0.1);
+      }
+
+      /* Remove price range slider styles since we're using a select dropdown */
+
+      /* Results Section */
+      .results-section {
+        margin-bottom: 60px;
+        display: none;
+      }
+
+      .results-section h2 {
+        font-size: 28px;
+        margin-bottom: 30px;
+        text-align: center;
+      }
+
+      .results-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 30px;
+      }
+
+      .gift-card {
+        background-color: var(--white);
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 5px 15px rgba(92, 84, 112, 0.05);
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .gift-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          45deg,
+          transparent,
+          rgba(255, 255, 255, 0.1),
+          transparent
+        );
+        transform: translateX(-100%);
+        transition: transform 0.6s;
+      }
+
+      .gift-card:hover::before {
+        transform: translateX(100%);
+      }
+
+      .gift-image {
+        height: 200px;
+        background-color: var(--light-bg);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .gift-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.5s ease;
+      }
+
+      .gift-card:hover .gift-image img {
+        transform: scale(1.1);
+      }
+
+      .gift-info {
+        padding: 20px;
+      }
+
+      .gift-title {
+        font-size: 18px;
+        font-weight: 600;
+        margin-bottom: 10px;
+      }
+
+      .gift-price {
+        color: var(--primary);
+        font-weight: 700;
+        margin-bottom: 15px;
+      }
+
+      .gift-description {
+        font-size: 14px;
+        color: var(--dark-gray);
+        margin-bottom: 20px;
+      }
+
+      .gift-meta {
+        display: flex;
+        justify-content: space-between;
+        font-size: 14px;
+        color: var(--dark-gray);
+      }
+
+      .popularity {
+        display: flex;
+        align-items: center;
+      }
+
+      .stars {
+        color: #ffd700;
+        margin-right: 5px;
+      }
+
+      .view-button {
+        display: block;
+        text-align: center;
+        padding: 12px;
+        background-color: linear-gradient(
+          45deg,
+          var(--primary),
+          var(--secondary)
+        );
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background-color 0.3s;
+        text-decoration: none;
+        margin-top: 15px;
+      }
+
+      .view-button:hover {
+        background-color: linear-gradient(
+          45deg,
+          var(--secondary),
+          var(--primary)
+        );
+      }
+
+      /* Footer */
+      footer {
+        background-color: var(--warm-pink);
+        padding: 40px 0;
+        border-top: 1px solid var(--gray);
+      }
+
+      .footer-content {
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 40px;
+      }
+
+      .footer-col {
+        flex: 1;
+        min-width: 200px;
+      }
+
+      .footer-col h3 {
+        font-size: 18px;
+        margin-bottom: 20px;
+        color: var(--text);
+      }
+
+      .footer-col ul {
+        list-style: none;
+        padding: 0;
+      }
+
+      .footer-col li {
+        margin-bottom: 10px;
+      }
+
+      .footer-col a {
+        text-decoration: none;
+        color: var(--dark-gray);
+        transition: color 0.3s;
+      }
+
+      .footer-col a:hover {
+        color: var(--primary);
+      }
+
+      .copyright {
+        text-align: center;
+        margin-top: 40px;
+        color: var(--dark-gray);
+        font-size: 14px;
+      }
+
+      /* Loading Animation */
+      .loading {
+        display: none;
+        text-align: center;
+        padding: 40px 0;
+      }
+
+      .loading-spinner {
+        border: 4px solid rgba(255, 255, 255, 0.3);
+        border-radius: 50%;
+        border-top: 4px solid var(--primary);
+        width: 40px;
+        height: 40px;
+        animation: rotate 1s linear infinite;
+        margin: 0 auto 20px;
+        position: relative;
+      }
+
+      .loading-spinner::before {
+        content: "";
+        position: absolute;
+        top: -4px;
+        left: -4px;
+        right: -4px;
+        bottom: -4px;
+        border-radius: 50%;
+        background: linear-gradient(45deg, var(--primary), transparent);
+        animation: rotate 2s linear infinite;
+      }
+
+      @keyframes rotate {
+        0% {
+          transform: rotate(0deg);
         }
-        
-        .nav-links a:hover {
-            color: var(--primary);
+        100% {
+          transform: rotate(360deg);
         }
-        
-        .nav-links a:hover::after {
-            width: 100%;
+      }
+
+      /* Floating Animation for Cards */
+      @keyframes float {
+        0% {
+          transform: translateY(0) scale(1);
         }
-        
-        .nav-links a.active {
-            color: var(--primary);
+        50% {
+          transform: translateY(-20px) scale(1.05);
         }
-        
-        .nav-links a.active::after {
-            width: 100%;
+        100% {
+          transform: translateY(0) scale(1);
         }
-        
-        .cta-button {
-            background: linear-gradient(45deg, var(--primary), var(--primary-light));
-            color: var(--secondary);
-            border: none;
-            padding: 12px 30px;
-            border-radius: 25px;
-            font-weight: 600;
-            font-size: 16px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-            box-shadow: 0 4px 15px rgba(255, 182, 193, 0.2);
+      }
+
+      .gift-card {
+        animation: float 6s ease-in-out infinite;
+      }
+
+      .gift-card:nth-child(2) {
+        animation-delay: 0.2s;
+      }
+
+      .gift-card:nth-child(3) {
+        animation-delay: 0.4s;
+      }
+
+      /* Glass Morphism Effect */
+      .gift-finder,
+      .about-section,
+      .step {
+        background: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+      }
+
+      /* Gradient Text Effect */
+      @keyframes gradient {
+        0% {
+          background-position: 0% 50%;
         }
-        
-        .cta-button::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 0;
-            height: 0;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 50%;
-            transform: translate(-50%, -50%);
-            transition: width 0.6s, height 0.6s;
+        50% {
+          background-position: 100% 50%;
         }
-        
-        .cta-button:hover::before {
-            width: 300%;
-            height: 300%;
+        100% {
+          background-position: 0% 50%;
         }
-        
-        .cta-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(255, 182, 193, 0.3);
-        }
-        
-        /* Hero Section */
-        .hero {
-            padding: 80px 0;
-            background: linear-gradient(135deg, var(--soft-pink) 0%, var(--white) 100%);
-            border-radius: 0 0 30px 30px;
-            margin-bottom: 60px;
-            position: relative;
-            overflow: hidden;
-            min-height: 600px;
-            display: flex;
-            align-items: center;
-        }
-        
-        .hero::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(45deg, rgba(255, 182, 193, 0.1), rgba(255, 228, 232, 0.2));
-            animation: gradientBG 15s ease infinite;
-            z-index: 1;
-        }
-        
-        .hero::after {
-            content: '';
-            position: absolute;
-            width: 300px;
-            height: 300px;
-            background: radial-gradient(circle, var(--primary-light) 0%, transparent 70%);
-            border-radius: 50%;
-            top: -150px;
-            right: -150px;
-            opacity: 0.3;
-            animation: pulse 8s ease-in-out infinite;
-        }
-        
-        .hero .container {
-            position: relative;
-            z-index: 2;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 40px;
-        }
-        
-        .hero-content {
-            flex: 1;
-            text-align: left;
-            animation: fadeInLeft 1s ease-out;
-        }
-        
-        .hero-image {
-            flex: 1;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            position: relative;
-            animation: fadeInRight 1s ease-out;
-            background: transparent;
-            padding: 20px;
-        }
-        
-        .hero-image img {
-            max-width: 100%;
-            height: auto;
-            filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.1));
-            animation: float 6s ease-in-out infinite;
-        }
-        
-        .hero-image::before {
-            content: '';
-            position: absolute;
-            width: 200px;
-            height: 200px;
-            background: linear-gradient(45deg, var(--primary-light), var(--secondary));
-            border-radius: 50%;
-            filter: blur(50px);
-            opacity: 0.3;
-            z-index: -1;
-            animation: pulse 4s ease-in-out infinite;
-        }
-        
-        .hero h1 {
-            font-size: 48px;
-            font-weight: 800;
-            margin-bottom: 20px;
-            color: var(--text);
-            background: linear-gradient(45deg, var(--primary), var(--secondary));
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            animation: gradient 8s ease infinite;
-            text-align: left;
-            position: relative;
-            display: inline-block;
-        }
-        
-        .hero h1::after {
-            content: '';
-            position: absolute;
-            bottom: -5px;
-            left: 0;
-            width: 100%;
-            height: 3px;
-            background: linear-gradient(45deg, var(--primary), var(--secondary));
-            transform: scaleX(0);
-            transform-origin: right;
-            transition: transform 0.5s ease;
-        }
-        
-        .hero h1:hover::after {
-            transform: scaleX(1);
-            transform-origin: left;
-        }
-        
-        .hero p {
-            font-size: 18px;
-            max-width: 600px;
-            margin: 0 auto 40px;
-            color: var(--dark-gray);
-            line-height: 1.8;
-            animation: fadeInUp 1s ease-out 0.3s both;
-        }
-        
-        .hero .cta-button {
-            animation: fadeInUp 1s ease-out 0.6s both;
-            position: relative;
-            overflow: hidden;
-            z-index: 1;
-        }
-        
-        .hero .cta-button::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-            transition: 0.5s;
-            z-index: -1;
-        }
-        
-        .hero .cta-button:hover::before {
-            left: 100%;
-        }
-        
-        @keyframes gradientBG {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-        
-        @keyframes fadeInLeft {
-            from {
-                opacity: 0;
-                transform: translateX(-50px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
-        
-        @keyframes fadeInRight {
-            from {
-                opacity: 0;
-                transform: translateX(50px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
-        
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        
-        @keyframes float {
-            0% {
-                transform: translateY(0) scale(1);
-            }
-            50% {
-                transform: translateY(-20px) scale(1.05);
-            }
-            100% {
-                transform: translateY(0) scale(1);
-            }
-        }
-        
-        @keyframes pulse {
-            0% { transform: scale(1); opacity: 0.3; }
-            50% { transform: scale(1.2); opacity: 0.2; }
-            100% { transform: scale(1); opacity: 0.3; }
-        }
-        
-        /* Gift Finder Form */
-        .gift-finder {
-            background-color: var(--white);
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(92, 84, 112, 0.05);
-            padding: 40px;
-            margin: 0 auto 60px;
-            max-width: 800px;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-        
-        .gift-finder h2 {
-            font-size: 28px;
-            margin-bottom: 30px;
-            text-align: center;
-        }
-        
-        .form-group {
-            margin-bottom: 25px;
-        }
-        
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 500;
-        }
-        
-        .form-control {
-            width: 100%;
-            padding: 15px;
-            border: 2px solid var(--gray);
-            border-radius: 15px;
-            font-size: 16px;
-            transition: border-color 0.3s;
-        }
-        
-        .form-control:focus {
-            outline: none;
-            border-color: var(--primary-light);
-            box-shadow: 0 0 0 3px rgba(255, 182, 193, 0.2);
-        }
-        
+      }
+
+      /* Responsive Design */
+      @media (max-width: 768px) {
         .form-row {
-            display: flex;
-            gap: 20px;
-        }
-        
-        .form-row .form-group {
-            flex: 1;
-        }
-        
-        .tags-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-top: 15px;
-        }
-        
-        .interest-tag {
-            background-color: var(--light-bg);
-            border: 1px solid var(--primary-light);
-            color: var(--secondary);
-            border-radius: 25px;
-            padding: 6px 15px;
-            font-size: 14px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .interest-tag::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 0;
-            height: 0;
-            background: rgba(255, 182, 193, 0.1);
-            border-radius: 50%;
-            transform: translate(-50%, -50%);
-            transition: width 0.3s, height 0.3s;
-        }
-        
-        .interest-tag:hover::before {
-            width: 200%;
-            height: 200%;
-        }
-        
-        .interest-tag.selected {
-            background-color: var(--primary-light);
-            border-color: var(--primary);
-            color: var(--secondary);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(92, 84, 112, 0.1);
-        }
-        
-        /* Remove price range slider styles since we're using a select dropdown */
-        
-        /* Results Section */
-        .results-section {
-            margin-bottom: 60px;
-            display: none;
-        }
-        
-        .results-section h2 {
-            font-size: 28px;
-            margin-bottom: 30px;
-            text-align: center;
-        }
-        
-        .results-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 30px;
-        }
-        
-        .gift-card {
-            background-color: var(--white);
-            border-radius: 15px;
-            overflow: hidden;
-            box-shadow: 0 5px 15px rgba(92, 84, 112, 0.05);
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .gift-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-            transform: translateX(-100%);
-            transition: transform 0.6s;
-        }
-        
-        .gift-card:hover::before {
-            transform: translateX(100%);
-        }
-        
-        .gift-image {
-            height: 200px;
-            background-color: var(--light-bg);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .gift-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.5s ease;
-        }
-        
-        .gift-card:hover .gift-image img {
-            transform: scale(1.1);
-        }
-        
-        .gift-info {
-            padding: 20px;
-        }
-        
-        .gift-title {
-            font-size: 18px;
-            font-weight: 600;
-            margin-bottom: 10px;
-        }
-        
-        .gift-price {
-            color: var(--primary);
-            font-weight: 700;
-            margin-bottom: 15px;
-        }
-        
-        .gift-description {
-            font-size: 14px;
-            color: var(--dark-gray);
-            margin-bottom: 20px;
-        }
-        
-        .gift-meta {
-            display: flex;
-            justify-content: space-between;
-            font-size: 14px;
-            color: var(--dark-gray);
-        }
-        
-        .popularity {
-            display: flex;
-            align-items: center;
-        }
-        
-        .stars {
-            color: #ffd700;
-            margin-right: 5px;
-        }
-        
-        .view-button {
-            display: block;
-            text-align: center;
-            padding: 12px;
-            background-color: linear-gradient(45deg, var(--primary), var(--secondary));
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background-color 0.3s;
-            text-decoration: none;
-            margin-top: 15px;
-        }
-        
-        .view-button:hover {
-            background-color: linear-gradient(45deg, var(--secondary), var(--primary));
-        }
-        
-        /* Footer */
-        footer {
-            background-color: var(--warm-pink);
-            padding: 40px 0;
-            border-top: 1px solid var(--gray);
-        }
-        
-        .footer-content {
-            display: flex;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 40px;
-        }
-        
-        .footer-col {
-            flex: 1;
-            min-width: 200px;
-        }
-        
-        .footer-col h3 {
-            font-size: 18px;
-            margin-bottom: 20px;
-            color: var(--text);
-        }
-        
-        .footer-col ul {
-            list-style: none;
-            padding: 0;
-        }
-        
-        .footer-col li {
-            margin-bottom: 10px;
-        }
-        
-        .footer-col a {
-            text-decoration: none;
-            color: var(--dark-gray);
-            transition: color 0.3s;
-        }
-        
-        .footer-col a:hover {
-            color: var(--primary);
-        }
-        
-        .copyright {
-            text-align: center;
-            margin-top: 40px;
-            color: var(--dark-gray);
-            font-size: 14px;
-        }
-        
-        /* Loading Animation */
-        .loading {
-            display: none;
-            text-align: center;
-            padding: 40px 0;
-        }
-        
-        .loading-spinner {
-            border: 4px solid rgba(255, 255, 255, 0.3);
-            border-radius: 50%;
-            border-top: 4px solid var(--primary);
-            width: 40px;
-            height: 40px;
-            animation: rotate 1s linear infinite;
-            margin: 0 auto 20px;
-            position: relative;
-        }
-        
-        .loading-spinner::before {
-            content: '';
-            position: absolute;
-            top: -4px;
-            left: -4px;
-            right: -4px;
-            bottom: -4px;
-            border-radius: 50%;
-            background: linear-gradient(45deg, var(--primary), transparent);
-            animation: rotate 2s linear infinite;
-        }
-        
-        @keyframes rotate {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        
-        /* Floating Animation for Cards */
-        @keyframes float {
-            0% {
-                transform: translateY(0) scale(1);
-            }
-            50% {
-                transform: translateY(-20px) scale(1.05);
-            }
-            100% {
-                transform: translateY(0) scale(1);
-            }
-        }
-        
-        .gift-card {
-            animation: float 6s ease-in-out infinite;
-        }
-        
-        .gift-card:nth-child(2) {
-            animation-delay: 0.2s;
-        }
-        
-        .gift-card:nth-child(3) {
-            animation-delay: 0.4s;
-        }
-        
-        /* Glass Morphism Effect */
-        .gift-finder, .about-section, .step {
-            background: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-        }
-        
-        /* Gradient Text Effect */
-        @keyframes gradient {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-        
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .form-row {
-                flex-direction: column;
-                gap: 0;
-            }
-            
-            .nav-links {
-                display: none;
-            }
-            
-            .hero h1 {
-                font-size: 32px;
-            }
-            
-            .gift-card, .category-card {
-                animation: none;
-            }
-            
-            .gift-finder {
-                padding: 30px 20px;
-            }
+          flex-direction: column;
+          gap: 0;
         }
 
-        /* Page Sections */
-        .page-section {
-            display: none;
-            opacity: 0;
-            transform: translateY(20px);
-            transition: opacity 0.5s ease, transform 0.5s ease;
-            position: absolute;
-            width: 100%;
-            left: 0;
+        .nav-links {
+          display: none;
         }
 
-        .page-section.active {
-            display: block;
-            opacity: 1;
-            transform: translateY(0);
-            position: relative;
+        .hero h1 {
+          font-size: 32px;
         }
 
-        /* Container for page sections */
-        .pages-container {
-            position: relative;
-            min-height: 100vh;
-        }
-
-        /* Categories Page */
-        .categories-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 30px;
-            padding: 40px 0;
-        }
-
+        .gift-card,
         .category-card {
-            background: var(--white);
-            border-radius: 15px;
-            overflow: hidden;
-            box-shadow: 0 5px 15px rgba(92, 84, 112, 0.05);
-            transition: transform 0.3s;
-            position: relative;
-            overflow: hidden;
+          animation: none;
         }
 
-        .category-card:hover {
-            transform: translateY(-5px);
+        .gift-finder {
+          padding: 30px 20px;
         }
+      }
 
-        .category-card::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(to bottom, transparent 0%, rgba(92, 84, 112, 0.2) 100%);
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
+      /* Page Sections */
+      .page-section {
+        display: none;
+        opacity: 0;
+        transform: translateY(20px);
+        transition: opacity 0.5s ease, transform 0.5s ease;
+        position: absolute;
+        width: 100%;
+        left: 0;
+      }
 
-        .category-card:hover::after {
-            opacity: 1;
-        }
+      .page-section.active {
+        display: block;
+        opacity: 1;
+        transform: translateY(0);
+        position: relative;
+      }
 
-        .category-image {
-            height: 200px;
-            background-size: cover;
-            background-position: center;
-            transition: transform 0.5s ease;
-        }
+      /* Container for page sections */
+      .pages-container {
+        position: relative;
+        min-height: 100vh;
+      }
 
-        .category-card:hover .category-image {
-            transform: scale(1.05);
-        }
+      /* Categories Page */
+      .categories-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 30px;
+        padding: 40px 0;
+      }
 
-        .category-info {
-            padding: 20px;
-        }
+      .category-card {
+        background: var(--white);
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 5px 15px rgba(92, 84, 112, 0.05);
+        transition: transform 0.3s;
+        position: relative;
+        overflow: hidden;
+      }
 
-        .category-title {
-            font-size: 20px;
-            font-weight: 600;
-            margin-bottom: 10px;
-        }
+      .category-card:hover {
+        transform: translateY(-5px);
+      }
 
-        .category-description {
-            color: var(--dark-gray);
-            margin-bottom: 15px;
-        }
+      .category-card::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          to bottom,
+          transparent 0%,
+          rgba(92, 84, 112, 0.2) 100%
+        );
+        opacity: 0;
+        transition: opacity 0.3s;
+      }
 
-        /* How It Works Page */
-        .steps-container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 40px 0;
-        }
+      .category-card:hover::after {
+        opacity: 1;
+      }
 
-        .step {
-            display: flex;
-            align-items: flex-start;
-            margin-bottom: 40px;
-            padding: 20px;
-            background: var(--white);
-            border-radius: 15px;
-            box-shadow: 0 5px 15px rgba(92, 84, 112, 0.05);
-        }
+      .category-image {
+        height: 200px;
+        background-size: cover;
+        background-position: center;
+        transition: transform 0.5s ease;
+      }
 
-        .step-number {
-            width: 40px;
-            height: 40px;
-            background: linear-gradient(45deg, var(--primary), var(--secondary));
-            color: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 600;
-            margin-right: 20px;
-            flex-shrink: 0;
-        }
+      .category-card:hover .category-image {
+        transform: scale(1.05);
+      }
 
-        .step-content {
-            flex: 1;
-        }
+      .category-info {
+        padding: 20px;
+      }
 
-        .step-title {
-            font-size: 20px;
-            font-weight: 600;
-            margin-bottom: 10px;
-        }
+      .category-title {
+        font-size: 20px;
+        font-weight: 600;
+        margin-bottom: 10px;
+      }
 
-        .step-description {
-            color: var(--dark-gray);
-        }
+      .category-description {
+        color: var(--dark-gray);
+        margin-bottom: 15px;
+      }
 
-        /* About Us Page */
-        .about-content {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 40px 0;
-        }
+      /* How It Works Page */
+      .steps-container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 40px 0;
+      }
 
-        .about-section {
-            background: var(--white);
-            border-radius: 15px;
-            padding: 30px;
-            margin-bottom: 30px;
-            box-shadow: 0 5px 15px rgba(92, 84, 112, 0.05);
-        }
+      .step {
+        display: flex;
+        align-items: flex-start;
+        margin-bottom: 40px;
+        padding: 20px;
+        background: var(--white);
+        border-radius: 15px;
+        box-shadow: 0 5px 15px rgba(92, 84, 112, 0.05);
+      }
 
-        .about-section h2 {
-            color: var(--primary);
-            margin-bottom: 20px;
-        }
+      .step-number {
+        width: 40px;
+        height: 40px;
+        background: linear-gradient(45deg, var(--primary), var(--secondary));
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 600;
+        margin-right: 20px;
+        flex-shrink: 0;
+      }
 
-        .about-section p {
-            color: var(--dark-gray);
-            line-height: 1.8;
-        }
+      .step-content {
+        flex: 1;
+      }
 
-        .team-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 30px;
-            margin-top: 30px;
-        }
+      .step-title {
+        font-size: 20px;
+        font-weight: 600;
+        margin-bottom: 10px;
+      }
 
-        .team-member {
-            text-align: center;
-        }
+      .step-description {
+        color: var(--dark-gray);
+      }
 
-        .team-member img {
-            width: 150px;
-            height: 150px;
-            border-radius: 50%;
-            margin-bottom: 15px;
-            object-fit: cover;
-        }
+      /* About Us Page */
+      .about-content {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 40px 0;
+      }
 
-        .team-member h3 {
-            margin-bottom: 5px;
-        }
+      .about-section {
+        background: var(--white);
+        border-radius: 15px;
+        padding: 30px;
+        margin-bottom: 30px;
+        box-shadow: 0 5px 15px rgba(92, 84, 112, 0.05);
+      }
 
-        .team-member p {
-            color: var(--dark-gray);
-            font-size: 14px;
-        }
+      .about-section h2 {
+        color: var(--primary);
+        margin-bottom: 20px;
+      }
 
-        /* Update the button styles */
-        .amazon-button {
-            display: block;
-            text-align: center;
-            padding: 12px;
-            background: linear-gradient(45deg, var(--primary), var(--primary-light));
-            color: var(--text);
-            border: none;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-decoration: none;
-            width: 100%;
-            margin-top: 15px;
-        }
+      .about-section p {
+        color: var(--dark-gray);
+        line-height: 1.8;
+      }
 
-        .amazon-button:hover {
-            background: linear-gradient(45deg, var(--primary-light), var(--primary));
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(255, 153, 0, 0.3);
-            color: var(--text);
-        }
+      .team-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 30px;
+        margin-top: 30px;
+      }
 
-        @keyframes pulse {
-            0% { transform: scale(1); opacity: 0.3; }
-            50% { transform: scale(1.2); opacity: 0.2; }
-            100% { transform: scale(1); opacity: 0.3; }
-        }
+      .team-member {
+        text-align: center;
+      }
 
-        /* Login/Signup Toggle */
-        .auth-switch {
-            text-align: center;
-            margin-top: 20px;
-            color: var(--dark-gray);
-        }
-        
-        .auth-switch a {
-            color: var(--primary);
-            text-decoration: none;
-            font-weight: 600;
-            transition: all 0.3s;
-        }
-        
-        .auth-switch a:hover {
-            color: var(--secondary);
-            text-decoration: underline;
-        }
-        
-        /* Remember Me and Forgot Password */
-        .form-options {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin: 15px 0;
-        }
-        
-        .remember-me {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            color: var(--dark-gray);
-        }
-        
-        .remember-me input[type="checkbox"] {
-            width: 16px;
-            height: 16px;
-            accent-color: var(--primary);
-        }
-        
-        .forgot-password {
-            color: var(--primary);
-            text-decoration: none;
-            font-size: 14px;
-            transition: color 0.3s;
-        }
-        
-        .forgot-password:hover {
-            color: var(--secondary);
-            text-decoration: underline;
-        }
+      .team-member img {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        margin-bottom: 15px;
+        object-fit: cover;
+      }
 
-        /* Modal Styles */
-        .modal-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(92, 84, 112, 0.5);
-            backdrop-filter: blur(5px);
-            -webkit-backdrop-filter: blur(5px);
-            z-index: 1000;
-        }
-        
-        .modal {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: white;
-            padding: 40px;
-            border-radius: 25px;
-            box-shadow: 0 20px 40px rgba(92, 84, 112, 0.1);
-            width: 90%;
-            max-width: 500px;
-            z-index: 1001;
-        }
-        
-        /* Additional Modal Styles */
-        .modal-header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        
-        .modal-header h2 {
-            color: var(--text);
-            font-size: 28px;
-            margin-bottom: 10px;
-        }
-        
-        .modal-header p {
-            color: var(--dark-gray);
-        }
-        
-        .close-modal {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background: none;
-            border: none;
-            font-size: 24px;
-            cursor: pointer;
-            color: var(--dark-gray);
-            transition: color 0.3s;
-        }
-        
-        .close-modal:hover {
-            color: var(--text);
-        }
-        
-        .form-field {
-            position: relative;
-            margin-bottom: 20px;
-        }
-        
-        .form-field input {
-            width: 100%;
-            padding: 12px;
-            border: 2px solid var(--gray);
-            border-radius: 8px;
-            font-size: 16px;
-            transition: border-color 0.3s;
-        }
-        
-        .form-field input:focus {
-            outline: none;
-            border-color: var(--primary);
-        }
-        
-        .form-field label {
-            position: absolute;
-            left: 12px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: white;
-            padding: 0 5px;
-            color: var(--dark-gray);
-            transition: all 0.3s;
-            pointer-events: none;
-        }
-        
-        .form-field input:focus + label,
-        .form-field input:not(:placeholder-shown) + label {
-            top: 0;
-            font-size: 14px;
-            color: var(--primary);
-        }
-        
-        .signup-button {
-            width: 100%;
-            padding: 12px;
-            background: linear-gradient(45deg, var(--primary), var(--primary-light));
-            color: var(--secondary);
-            border: none;
-            border-radius: 15px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: transform 0.3s, box-shadow 0.3s;
-        }
-        
-        .signup-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(255, 182, 193, 0.3);
-        }
-        
-        .social-signup {
-            text-align: center;
-            margin-top: 20px;
-        }
-        
-        .social-buttons {
-            display: flex;
-            gap: 10px;
-            margin-top: 15px;
-        }
-        
-        .social-button {
-            flex: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            padding: 12px;
-            background: var(--light-bg);
-            border: none;
-            border-radius: 15px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        
-        .social-button:hover {
-            background: var(--primary-light);
-            transform: translateY(-2px);
-        }
-        
-        .social-button img {
-            width: 20px;
-            height: 20px;
-        }
-        
-        .gift-icon {
-            width: 600px;
-            height: 600px;
-            cursor: pointer;
-            user-select: none;
-            animation: float 6s ease-in-out infinite;
-            filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.1));
-            background: transparent;
-            object-fit: contain;
-        }
-        
-        /* Base style for the gift box and lid */
-        .gift-box {
-            fill: #FFB6C1;
-            stroke: #FFD1DC;
-            stroke-width: 3;
-            filter: drop-shadow(0 4px 8px rgba(255, 182, 193, 0.3));
-        }
-        
-        .gift-lid {
-            fill: #FFD1DC;
-            stroke: #FFB6C1;
-            stroke-width: 3;
-            filter: drop-shadow(0 4px 8px rgba(255, 182, 193, 0.3));
-            transform-origin: 50% 100%;
-            transition: transform 0.5s ease;
-        }
-        
-        .gift-ribbon {
-            fill: #FFD93D;
-            stroke: #FFB800;
-            stroke-width: 2;
-        }
-        
-        /* Style for the heart */
-        .heart {
-            fill: #FFB6C1;
-            stroke: #FFD1DC;
-            stroke-width: 2;
-            opacity: 0;
-            transform: translateY(20px) scale(0.8);
-            transform-origin: center bottom;
-            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
-        
-        /* On click, animate the lid and heart */
-        .active .gift-lid {
-            transform: rotateX(-60deg);
-        }
-        
-        .active .heart {
-            opacity: 1;
-            transform: translateY(-30px) scale(1);
-        }
-        
-        @keyframes popHeart {
-            0% {
-                transform: rotate(45deg) scale(0);
-                opacity: 0;
-            }
-            50% {
-                opacity: 1;
-            }
-            100% {
-                transform: rotate(45deg) scale(1) translate(var(--tx), var(--ty));
-                opacity: 0;
-            }
-        }
+      .team-member h3 {
+        margin-bottom: 5px;
+      }
 
-        .social-link {
-            display: inline-block;
-            padding: 8px 15px;
-            background: linear-gradient(45deg, var(--primary), var(--primary-light));
-            color: var(--text);
-            text-decoration: none;
-            border-radius: 20px;
-            transition: all 0.3s ease;
-            margin: 5px 0;
-            width: 100%;
-            text-align: center;
-            cursor: pointer;
-        }
+      .team-member p {
+        color: var(--dark-gray);
+        font-size: 14px;
+      }
 
-        .social-link:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(255, 182, 193, 0.3);
-            background: linear-gradient(45deg, var(--primary-light), var(--primary));
-        }
+      /* Update the button styles */
+      .amazon-button {
+        display: block;
+        text-align: center;
+        padding: 12px;
+        background: linear-gradient(
+          45deg,
+          var(--primary),
+          var(--primary-light)
+        );
+        color: var(--text);
+        border: none;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        width: 100%;
+        margin-top: 15px;
+      }
 
-        .footer-col ul {
-            list-style: none;
-            padding: 0;
-        }
+      .amazon-button:hover {
+        background: linear-gradient(
+          45deg,
+          var(--primary-light),
+          var(--primary)
+        );
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(255, 153, 0, 0.3);
+        color: var(--text);
+      }
 
-        .footer-col li {
-            margin-bottom: 10px;
+      @keyframes pulse {
+        0% {
+          transform: scale(1);
+          opacity: 0.3;
         }
+        50% {
+          transform: scale(1.2);
+          opacity: 0.2;
+        }
+        100% {
+          transform: scale(1);
+          opacity: 0.3;
+        }
+      }
+
+      /* Login/Signup Toggle */
+      .auth-switch {
+        text-align: center;
+        margin-top: 20px;
+        color: var(--dark-gray);
+      }
+
+      .auth-switch a {
+        color: var(--primary);
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.3s;
+      }
+
+      .auth-switch a:hover {
+        color: var(--secondary);
+        text-decoration: underline;
+      }
+
+      /* Remember Me and Forgot Password */
+      .form-options {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin: 15px 0;
+      }
+
+      .remember-me {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: var(--dark-gray);
+      }
+
+      .remember-me input[type="checkbox"] {
+        width: 16px;
+        height: 16px;
+        accent-color: var(--primary);
+      }
+
+      .forgot-password {
+        color: var(--primary);
+        text-decoration: none;
+        font-size: 14px;
+        transition: color 0.3s;
+      }
+
+      .forgot-password:hover {
+        color: var(--secondary);
+        text-decoration: underline;
+      }
+
+      /* Modal Styles */
+      .modal-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(92, 84, 112, 0.5);
+        backdrop-filter: blur(5px);
+        -webkit-backdrop-filter: blur(5px);
+        z-index: 1000;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+      }
+
+      .modal-overlay.show {
+        opacity: 1;
+      }
+
+      .modal {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) scale(0.8);
+        background: white;
+        padding: 40px;
+        border-radius: 25px;
+        box-shadow: 0 20px 40px rgba(92, 84, 112, 0.1);
+        width: 90%;
+        max-width: 500px;
+        z-index: 1001;
+        opacity: 0;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      .modal-overlay.show .modal {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+      }
+
+      .modal.slide-out {
+        transform: translate(-150%, -50%) scale(0.8);
+        opacity: 0;
+      }
+
+      .modal.slide-in {
+        transform: translate(50%, -50%) scale(0.8);
+        opacity: 0;
+      }
+
+      /* Additional Modal Styles */
+      .modal-header {
+        text-align: center;
+        margin-bottom: 30px;
+      }
+
+      .modal-header h2 {
+        color: var(--text);
+        font-size: 28px;
+        margin-bottom: 10px;
+      }
+
+      .modal-header p {
+        color: var(--dark-gray);
+      }
+
+      .close-modal {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        background: none;
+        border: none;
+        font-size: 24px;
+        cursor: pointer;
+        color: var(--dark-gray);
+        transition: color 0.3s;
+      }
+
+      .close-modal:hover {
+        color: var(--text);
+      }
+
+      .form-field {
+        position: relative;
+        margin-bottom: 20px;
+      }
+
+      .form-field input {
+        width: 100%;
+        padding: 12px;
+        border: 2px solid var(--gray);
+        border-radius: 8px;
+        font-size: 16px;
+        transition: border-color 0.3s;
+      }
+
+      .form-field input:focus {
+        outline: none;
+        border-color: var(--primary);
+      }
+
+      .form-field label {
+        position: absolute;
+        left: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: white;
+        padding: 0 5px;
+        color: var(--dark-gray);
+        transition: all 0.3s;
+        pointer-events: none;
+      }
+
+      .form-field input:focus + label,
+      .form-field input:not(:placeholder-shown) + label {
+        top: 0;
+        font-size: 14px;
+        color: var(--primary);
+      }
+
+      .signup-button {
+        width: 100%;
+        padding: 12px;
+        background: linear-gradient(
+          45deg,
+          var(--primary),
+          var(--primary-light)
+        );
+        color: var(--secondary);
+        border: none;
+        border-radius: 15px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: transform 0.3s, box-shadow 0.3s;
+      }
+
+      .signup-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(255, 182, 193, 0.3);
+      }
+
+      .social-signup {
+        text-align: center;
+        margin-top: 20px;
+      }
+
+      .social-buttons {
+        display: flex;
+        gap: 10px;
+        margin-top: 15px;
+      }
+
+      .social-button {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        padding: 12px;
+        background: var(--light-bg);
+        border: none;
+        border-radius: 15px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .social-button:hover {
+        background: var(--primary-light);
+        transform: translateY(-2px);
+      }
+
+      .social-button img {
+        width: 20px;
+        height: 20px;
+      }
+
+      .gift-icon {
+        width: 600px;
+        height: 600px;
+        cursor: pointer;
+        user-select: none;
+        animation: float 6s ease-in-out infinite;
+        filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.1));
+        background: transparent;
+        object-fit: contain;
+      }
+
+      /* Base style for the gift box and lid */
+      .gift-box {
+        fill: #ffb6c1;
+        stroke: #ffd1dc;
+        stroke-width: 3;
+        filter: drop-shadow(0 4px 8px rgba(255, 182, 193, 0.3));
+      }
+
+      .gift-lid {
+        fill: #ffd1dc;
+        stroke: #ffb6c1;
+        stroke-width: 3;
+        filter: drop-shadow(0 4px 8px rgba(255, 182, 193, 0.3));
+        transform-origin: 50% 100%;
+        transition: transform 0.5s ease;
+      }
+
+      .gift-ribbon {
+        fill: #ffd93d;
+        stroke: #ffb800;
+        stroke-width: 2;
+      }
+
+      /* Style for the heart */
+      .heart {
+        fill: #ffb6c1;
+        stroke: #ffd1dc;
+        stroke-width: 2;
+        opacity: 0;
+        transform: translateY(20px) scale(0.8);
+        transform-origin: center bottom;
+        transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+      }
+
+      /* On click, animate the lid and heart */
+      .active .gift-lid {
+        transform: rotateX(-60deg);
+      }
+
+      .active .heart {
+        opacity: 1;
+        transform: translateY(-30px) scale(1);
+      }
+
+      @keyframes popHeart {
+        0% {
+          transform: rotate(45deg) scale(0);
+          opacity: 0;
+        }
+        50% {
+          opacity: 1;
+        }
+        100% {
+          transform: rotate(45deg) scale(1) translate(var(--tx), var(--ty));
+          opacity: 0;
+        }
+      }
+
+      .social-link {
+        display: inline-block;
+        padding: 8px 15px;
+        background: linear-gradient(
+          45deg,
+          var(--primary),
+          var(--primary-light)
+        );
+        color: var(--text);
+        text-decoration: none;
+        border-radius: 20px;
+        transition: all 0.3s ease;
+        margin: 5px 0;
+        width: 100%;
+        text-align: center;
+        cursor: pointer;
+      }
+
+      .social-link:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(255, 182, 193, 0.3);
+        background: linear-gradient(
+          45deg,
+          var(--primary-light),
+          var(--primary)
+        );
+      }
+
+      .footer-col ul {
+        list-style: none;
+        padding: 0;
+      }
+
+      .footer-col li {
+        margin-bottom: 10px;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <header>
-        <div class="container">
-            <nav>
-                <a href="#" class="logo">
-                    <i class="fas fa-gift"></i>
-                    <span>GiftGenius</span>
-                </a>
-                <div style="display: flex; align-items: center; margin-left: auto;">
-                    <ul class="nav-links">
-                        <li><a href="#" data-page="home" class="active">Home</a></li>
-                        <li><a href="#" data-page="categories">Categories</a></li>
-                        <li><a href="#" data-page="how-it-works">How It Works</a></li>
-                        <li><a href="#" data-page="about">About Us</a></li>
-                    </ul>
-                    <button class="cta-button" onclick="openSignupModal()">Sign Up</button>
-                </div>
-            </nav>
-        </div>
+      <div class="container">
+        <nav>
+          <a href="#" class="logo">
+            <i class="fas fa-gift"></i>
+            <span>GiftGenius</span>
+          </a>
+          <div style="display: flex; align-items: center; margin-left: auto">
+            <ul class="nav-links">
+              <li><a href="#" data-page="home" class="active">Home</a></li>
+              <li><a href="#" data-page="categories">Categories</a></li>
+              <li><a href="#" data-page="how-it-works">How It Works</a></li>
+              <li><a href="#" data-page="about">About Us</a></li>
+            </ul>
+            <button class="cta-button" onclick="openSignupModal()">
+              Sign Up
+            </button>
+          </div>
+        </nav>
+      </div>
     </header>
 
     <div class="pages-container">
-        <!-- Home Section -->
-        <section class="page-section active" id="home">
-            <section class="hero">
-                <div class="container">
-                    <div class="hero-content">
-                        <h1>Find the Perfect Gift Every Time</h1>
-                        <p>Our AI-powered gift recommendation system finds thoughtful, personalized gifts for your loved ones based on their interests and your budget.</p>
-                        <button class="cta-button" id="getStartedBtn">Get Started</button>
-                    </div>
-                    <div class="hero-image">
-                        <img src="https://i.postimg.cc/8kLM0yFt/DALL-E-2025-03-21-14-52-09-A-modern-and-stylish-gift-box-icon-designed-with-a-warm-pink-color-sche.png" alt="Modern Gift Box" class="gift-icon" id="giftIcon">
-                    </div>
-                </div>
-            </section>
-
-            <div class="container">
-                <section class="gift-finder">
-                    <h2>Tell Us About Your Gift Recipient</h2>
-                    <form id="gift-form">
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="recipient-name">Recipient's Name</label>
-                                <input type="text" id="recipient-name" class="form-control" placeholder="Who is this gift for?">
-                            </div>
-                            <div class="form-group">
-                                <label for="relationship">Your Relationship</label>
-                                <select id="relationship" class="form-control">
-                                    <option value="">Select relationship</option>
-                                    <option value="friend">Friend</option>
-                                    <option value="partner">Partner/Spouse</option>
-                                    <option value="family">Family Member</option>
-                                    <option value="colleague">Colleague</option>
-                                    <option value="other">Other</option>
-                                </select>
-                            </div>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="occasion">Occasion</label>
-                            <select id="occasion" class="form-control">
-                                <option value="">Select occasion</option>
-                                <option value="birthday">Birthday</option>
-                                <option value="anniversary">Anniversary</option>
-                                <option value="holiday">Holiday</option>
-                                <option value="graduation">Graduation</option>
-                                <option value="wedding">Wedding</option>
-                                <option value="baby">Baby Shower</option>
-                                <option value="housewarming">Housewarming</option>
-                                <option value="other">Other</option>
-                            </select>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label>Age Range</label>
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <select id="age-range" class="form-control">
-                                        <option value="">Select age range</option>
-                                        <option value="child">Child (0-12)</option>
-                                        <option value="teen">Teen (13-19)</option>
-                                        <option value="young-adult">Young Adult (20-29)</option>
-                                        <option value="adult">Adult (30-49)</option>
-                                        <option value="middle-age">Middle Age (50-64)</option>
-                                        <option value="senior">Senior (65+)</option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <select id="gender" class="form-control">
-                                        <option value="">Select gender (optional)</option>
-                                        <option value="male">Male</option>
-                                        <option value="female">Female</option>
-                                        <option value="non-binary">Non-binary</option>
-                                        <option value="prefer-not-to-say">Prefer not to say</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label>Interests & Hobbies</label>
-                            <input type="text" id="interests-input" class="form-control" placeholder="Type interests or select from below">
-                            <div class="tags-container">
-                                <span class="interest-tag">Reading</span>
-                                <span class="interest-tag">Music</span>
-                                <span class="interest-tag">Gaming</span>
-                                <span class="interest-tag">Cooking</span>
-                                <span class="interest-tag">Travel</span>
-                                <span class="interest-tag">Sports</span>
-                                <span class="interest-tag">Art</span>
-                                <span class="interest-tag">Technology</span>
-                                <span class="interest-tag">Fashion</span>
-                                <span class="interest-tag">Health & Wellness</span>
-                                <span class="interest-tag">Home Decor</span>
-                                <span class="interest-tag">Gardening</span>
-                            </div>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="price-range">Budget Range</label>
-                            <select id="price-range" class="form-control">
-                                <option value="">Select budget range</option>
-                                <option value="100-500">Under ₹500</option>
-                                <option value="500-1000">₹500 - ₹1,000</option>
-                                <option value="1000-2000">₹1,000 - ₹2,000</option>
-                                <option value="2000-5000">₹2,000 - ₹5,000</option>
-                                <option value="5000-10000">₹5,000 - ₹10,000</option>
-                                <option value="10000+">Above ₹10,000</option>
-                            </select>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="special-notes">Any Special Notes or Requirements? (Optional)</label>
-                            <textarea id="special-notes" class="form-control" rows="3" placeholder="Add any additional details that might help us find the perfect gift (optional)..."></textarea>
-                        </div>
-                        
-                        <button type="submit" class="cta-button" style="width: 100%;">Find Perfect Gifts</button>
-                    </form>
-                </section>
-                
-                <div class="loading">
-                    <div class="loading-spinner"></div>
-                    <p>Finding perfect gift ideas based on your preferences...</p>
-                </div>
-                
-                <section class="results-section" id="results-section">
-                    <h2>Here Are Your Personalized Gift Recommendations</h2>
-                    <div class="results-grid">
-                        <!-- Gift cards will be generated here -->
-                    </div>
-                </section>
+      <!-- Home Section -->
+      <section class="page-section active" id="home">
+        <section class="hero">
+          <div class="container">
+            <div class="hero-content">
+              <h1>Find the Perfect Gift Every Time</h1>
+              <p>
+                Our AI-powered gift recommendation system finds thoughtful,
+                personalized gifts for your loved ones based on their interests
+                and your budget.
+              </p>
+              <button class="cta-button" id="getStartedBtn">Get Started</button>
             </div>
+            <div class="hero-image">
+              <img
+                src="https://i.postimg.cc/8kLM0yFt/DALL-E-2025-03-21-14-52-09-A-modern-and-stylish-gift-box-icon-designed-with-a-warm-pink-color-sche.png"
+                alt="Modern Gift Box"
+                class="gift-icon"
+                id="giftIcon"
+              />
+            </div>
+          </div>
         </section>
 
-        <!-- Categories Section -->
-        <section class="page-section" id="categories">
-            <div class="container">
-                <h1 style="text-align: center; margin: 40px 0;">Gift Categories</h1>
-                <div class="categories-grid">
-                    <div class="category-card">
-                        <div class="category-image" style="background-image: url('https://picsum.photos/400/300?random=1')"></div>
-                        <div class="category-info">
-                            <h3 class="category-title">Tech Gadgets</h3>
-                            <p class="category-description">Latest gadgets and tech accessories for the tech-savvy.</p>
-                            <a href="#" class="view-button" onclick="showCategoryProducts('tech')">Explore</a>
-                        </div>
-                    </div>
-                    <div class="category-card">
-                        <div class="category-image" style="background-image: url('https://picsum.photos/400/300?random=2')"></div>
-                        <div class="category-info">
-                            <h3 class="category-title">Home & Living</h3>
-                            <p class="category-description">Beautiful home decor and lifestyle products.</p>
-                            <a href="#" class="view-button" onclick="showCategoryProducts('home')">Explore</a>
-                        </div>
-                    </div>
-                    <div class="category-card">
-                        <div class="category-image" style="background-image: url('https://picsum.photos/400/300?random=3')"></div>
-                        <div class="category-info">
-                            <h3 class="category-title">Fashion & Accessories</h3>
-                            <p class="category-description">Trendy fashion items and stylish accessories.</p>
-                            <a href="#" class="view-button" onclick="showCategoryProducts('fashion')">Explore</a>
-                        </div>
-                    </div>
-                    <div class="category-card">
-                        <div class="category-image" style="background-image: url('https://picsum.photos/400/300?random=4')"></div>
-                        <div class="category-info">
-                            <h3 class="category-title">Sports & Outdoors</h3>
-                            <p class="category-description">Equipment and gear for sports enthusiasts.</p>
-                            <a href="#" class="view-button" onclick="showCategoryProducts('sports')">Explore</a>
-                        </div>
-                    </div>
-                    <div class="category-card">
-                        <div class="category-image" style="background-image: url('https://picsum.photos/400/300?random=5')"></div>
-                        <div class="category-info">
-                            <h3 class="category-title">Books & Stationery</h3>
-                            <p class="category-description">Books, notebooks, and writing supplies for bookworms and creative minds.</p>
-                            <a href="#" class="view-button" onclick="showCategoryProducts('books')">Explore</a>
-                        </div>
-                    </div>
-                    <div class="category-card">
-                        <div class="category-image" style="background-image: url('https://picsum.photos/400/300?random=6')"></div>
-                        <div class="category-info">
-                            <h3 class="category-title">Health & Wellness</h3>
-                            <p class="category-description">Products for fitness, relaxation, and overall well-being.</p>
-                            <a href="#" class="view-button" onclick="showCategoryProducts('health')">Explore</a>
-                        </div>
-                    </div>
+        <div class="container">
+          <section class="gift-finder">
+            <h2>Tell Us About Your Gift Recipient</h2>
+            <form id="gift-form">
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="recipient-name">Recipient's Name</label>
+                  <input
+                    type="text"
+                    id="recipient-name"
+                    class="form-control"
+                    placeholder="Who is this gift for?"
+                  />
                 </div>
+                <div class="form-group">
+                  <label for="relationship">Your Relationship</label>
+                  <select id="relationship" class="form-control">
+                    <option value="">Select relationship</option>
+                    <option value="friend">Friend</option>
+                    <option value="partner">Partner/Spouse</option>
+                    <option value="family">Family Member</option>
+                    <option value="colleague">Colleague</option>
+                    <option value="other">Other</option>
+                  </select>
+                </div>
+              </div>
 
-                <!-- Category Products Section -->
-                <div id="category-products" style="display: none;">
-                    <div class="category-header" style="display: flex; justify-content: space-between; align-items: center; margin: 40px 0;">
-                        <h2 id="category-title"></h2>
-                        <button class="cta-button" onclick="hideCategoryProducts()">Back to Categories</button>
-                    </div>
-                    <div class="results-grid" id="category-products-grid">
-                        <!-- Products will be dynamically added here -->
-                    </div>
-                </div>
-            </div>
-        </section>
+              <div class="form-group">
+                <label for="occasion">Occasion</label>
+                <select id="occasion" class="form-control">
+                  <option value="">Select occasion</option>
+                  <option value="birthday">Birthday</option>
+                  <option value="anniversary">Anniversary</option>
+                  <option value="holiday">Holiday</option>
+                  <option value="graduation">Graduation</option>
+                  <option value="wedding">Wedding</option>
+                  <option value="baby">Baby Shower</option>
+                  <option value="housewarming">Housewarming</option>
+                  <option value="other">Other</option>
+                </select>
+              </div>
 
-        <!-- How It Works Section -->
-        <section class="page-section" id="how-it-works">
-            <div class="container">
-                <h1 style="text-align: center; margin: 40px 0;">How GiftGenius Works</h1>
-                <div class="steps-container">
-                    <div class="step">
-                        <div class="step-number">1</div>
-                        <div class="step-content">
-                            <h3 class="step-title">Tell Us About the Recipient</h3>
-                            <p class="step-description">Fill out our simple form with details about the person you're shopping for, including their interests, age, and the occasion.</p>
-                        </div>
-                    </div>
-                    <div class="step">
-                        <div class="step-number">2</div>
-                        <div class="step-content">
-                            <h3 class="step-title">Set Your Budget</h3>
-                            <p class="step-description">Choose your preferred price range, and we'll ensure all recommendations fit within your budget.</p>
-                        </div>
-                    </div>
-                    <div class="step">
-                        <div class="step-number">3</div>
-                        <div class="step-content">
-                            <h3 class="step-title">Get Personalized Recommendations</h3>
-                            <p class="step-description">Our AI analyzes the information and provides a curated list of gift ideas that match the recipient's interests and your budget.</p>
-                        </div>
-                    </div>
-                    <div class="step">
-                        <div class="step-number">4</div>
-                        <div class="step-content">
-                            <h3 class="step-title">Choose and Purchase</h3>
-                            <p class="step-description">Browse through the recommendations, read reviews, and select the perfect gift. We'll guide you to trusted retailers where you can make your purchase.</p>
-                        </div>
-                    </div>
+              <div class="form-group">
+                <label>Age Range</label>
+                <div class="form-row">
+                  <div class="form-group">
+                    <select id="age-range" class="form-control">
+                      <option value="">Select age range</option>
+                      <option value="child">Child (0-12)</option>
+                      <option value="teen">Teen (13-19)</option>
+                      <option value="young-adult">Young Adult (20-29)</option>
+                      <option value="adult">Adult (30-49)</option>
+                      <option value="middle-age">Middle Age (50-64)</option>
+                      <option value="senior">Senior (65+)</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <select id="gender" class="form-control">
+                      <option value="">Select gender (optional)</option>
+                      <option value="male">Male</option>
+                      <option value="female">Female</option>
+                      <option value="non-binary">Non-binary</option>
+                      <option value="prefer-not-to-say">
+                        Prefer not to say
+                      </option>
+                    </select>
+                  </div>
                 </div>
-            </div>
-        </section>
+              </div>
 
-        <!-- About Us Section -->
-        <section class="page-section" id="about">
-            <div class="container">
-                <h1 style="text-align: center; margin: 40px 0;">About GiftGenius</h1>
-                <div class="about-content">
-                    <div class="about-section">
-                        <h2>Our Mission</h2>
-                        <p>At GiftGenius, we believe that finding the perfect gift should be an enjoyable experience, not a stressful one. Our mission is to help people discover thoughtful, personalized gifts that create lasting memories and strengthen relationships.</p>
-                    </div>
-                    <div class="about-section">
-                        <h2>Our Story</h2>
-                        <p>GiftGenius was born from a simple yet powerful idea: making gift-giving easier and more meaningful. Our journey began when a group of passionate individuals recognized the universal challenge of finding the perfect gift. We combined our expertise in technology and gift-giving to create an AI-powered platform that takes the guesswork out of gift selection. Today, GiftGenius helps thousands of people find thoughtful, personalized gifts that create lasting memories and strengthen relationships.</p>
-                    </div>
-                    <div class="about-section">
-                        <h2>Our Team</h2>
-                        <div class="team-grid">
-                            <div class="team-member">
-                                <img src="https://picsum.photos/150/150?random=1" alt="Team Member">
-                                <h3>Avinash Mishra</h3>
-                                <p>Team Leader</p>
-                            </div>
-                            <div class="team-member">
-                                <img src="https://picsum.photos/150/150?random=2" alt="Team Member">
-                                <h3>Mobashshir</h3>
-                                <p>Member 1</p>
-                            </div>
-                            <div class="team-member">
-                                <img src="https://picsum.photos/150/150?random=3" alt="Team Member">
-                                <h3>Gyanendra Dubey</h3>
-                                <p>Member 2</p>
-                            </div>
-                            <div class="team-member">
-                                <img src="https://picsum.photos/150/150?random=4" alt="Team Member">
-                                <h3>Shashwat Shukla</h3>
-                                <p>Member 3</p>
-                            </div>
-                        </div>
-                    </div>
+              <div class="form-group">
+                <label>Interests & Hobbies</label>
+                <input
+                  type="text"
+                  id="interests-input"
+                  class="form-control"
+                  placeholder="Type interests or select from below"
+                />
+                <div class="tags-container">
+                  <span class="interest-tag">Reading</span>
+                  <span class="interest-tag">Music</span>
+                  <span class="interest-tag">Gaming</span>
+                  <span class="interest-tag">Cooking</span>
+                  <span class="interest-tag">Travel</span>
+                  <span class="interest-tag">Sports</span>
+                  <span class="interest-tag">Art</span>
+                  <span class="interest-tag">Technology</span>
+                  <span class="interest-tag">Fashion</span>
+                  <span class="interest-tag">Health & Wellness</span>
+                  <span class="interest-tag">Home Decor</span>
+                  <span class="interest-tag">Gardening</span>
                 </div>
+              </div>
+
+              <div class="form-group">
+                <label for="price-range">Budget Range</label>
+                <select id="price-range" class="form-control">
+                  <option value="">Select budget range</option>
+                  <option value="100-500">Under ₹500</option>
+                  <option value="500-1000">₹500 - ₹1,000</option>
+                  <option value="1000-2000">₹1,000 - ₹2,000</option>
+                  <option value="2000-5000">₹2,000 - ₹5,000</option>
+                  <option value="5000-10000">₹5,000 - ₹10,000</option>
+                  <option value="10000+">Above ₹10,000</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="special-notes"
+                  >Any Special Notes or Requirements? (Optional)</label
+                >
+                <textarea
+                  id="special-notes"
+                  class="form-control"
+                  rows="3"
+                  placeholder="Add any additional details that might help us find the perfect gift (optional)..."
+                ></textarea>
+              </div>
+
+              <button type="submit" class="cta-button" style="width: 100%">
+                Find Perfect Gifts
+              </button>
+            </form>
+          </section>
+
+          <div class="loading">
+            <div class="loading-spinner"></div>
+            <p>Finding perfect gift ideas based on your preferences...</p>
+          </div>
+
+          <section class="results-section" id="results-section">
+            <h2>Here Are Your Personalized Gift Recommendations</h2>
+            <div class="results-grid">
+              <!-- Gift cards will be generated here -->
             </div>
-        </section>
+          </section>
+        </div>
+      </section>
+
+      <!-- Categories Section -->
+      <section class="page-section" id="categories">
+        <div class="container">
+          <h1 style="text-align: center; margin: 40px 0">Gift Categories</h1>
+          <div class="categories-grid">
+            <div class="category-card">
+              <div
+                class="category-image"
+                style="
+                  background-image: url('https://i.postimg.cc/wBKjcDSG/IMG-20250323-WA0002.jpg');
+                "
+              ></div>
+              <div class="category-info">
+                <h3 class="category-title">Tech Gadgets</h3>
+                <p class="category-description">
+                  Latest gadgets and tech accessories for the tech-savvy.
+                </p>
+                <a
+                  href="#"
+                  class="view-button"
+                  onclick="showCategoryProducts('tech')"
+                  >Explore</a
+                >
+              </div>
+            </div>
+            <div class="category-card">
+              <div
+                class="category-image"
+                style="
+                  background-image: url('https://i.postimg.cc/59P9Khhv/IMG-20250323-WA0006.jpg');
+                "
+              ></div>
+              <div class="category-info">
+                <h3 class="category-title">Home & Living</h3>
+                <p class="category-description">
+                  Beautiful home decor and lifestyle products.
+                </p>
+                <a
+                  href="#"
+                  class="view-button"
+                  onclick="showCategoryProducts('home')"
+                  >Explore</a
+                >
+              </div>
+            </div>
+            <div class="category-card">
+              <div
+                class="category-image"
+                style="
+                  background-image: url('https://i.postimg.cc/cHytHpx6/IMG-20250323-WA0004.jpg');
+                "
+              ></div>
+              <div class="category-info">
+                <h3 class="category-title">Fashion & Accessories</h3>
+                <p class="category-description">
+                  Trendy fashion items and stylish accessories.
+                </p>
+                <a
+                  href="#"
+                  class="view-button"
+                  onclick="showCategoryProducts('fashion')"
+                  >Explore</a
+                >
+              </div>
+            </div>
+            <div class="category-card">
+              <div
+                class="category-image"
+                style="
+                  background-image: url('https://i.postimg.cc/jSfs5LLQ/IMG-20250323-WA0003.jpg');
+                "
+              ></div>
+              <div class="category-info">
+                <h3 class="category-title">Sports & Outdoors</h3>
+                <p class="category-description">
+                  Equipment and gear for sports enthusiasts.
+                </p>
+                <a
+                  href="#"
+                  class="view-button"
+                  onclick="showCategoryProducts('sports')"
+                  >Explore</a
+                >
+              </div>
+            </div>
+            <div class="category-card">
+              <div
+                class="category-image"
+                style="
+                  background-image: url('https://i.postimg.cc/288bVFDd/IMG-20250323-WA0007.jpg');
+                "
+              ></div>
+              <div class="category-info">
+                <h3 class="category-title">Books & Stationery</h3>
+                <p class="category-description">
+                  Books, notebooks, and writing supplies for bookworms and
+                  creative minds.
+                </p>
+                <a
+                  href="#"
+                  class="view-button"
+                  onclick="showCategoryProducts('books')"
+                  >Explore</a
+                >
+              </div>
+            </div>
+            <div class="category-card">
+              <div
+                class="category-image"
+                style="
+                  background-image: url('https://i.postimg.cc/4xjmLDhw/IMG-20250323-WA0005.jpg');
+                "
+              ></div>
+              <div class="category-info">
+                <h3 class="category-title">Health & Wellness</h3>
+                <p class="category-description">
+                  Products for fitness, relaxation, and overall well-being.
+                </p>
+                <a
+                  href="#"
+                  class="view-button"
+                  onclick="showCategoryProducts('health')"
+                  >Explore</a
+                >
+              </div>
+            </div>
+          </div>
+
+          <!-- Category Products Section -->
+          <div id="category-products" style="display: none">
+            <div
+              class="category-header"
+              style="
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin: 40px 0;
+              "
+            >
+              <h2 id="category-title"></h2>
+              <button class="cta-button" onclick="hideCategoryProducts()">
+                Back to Categories
+              </button>
+            </div>
+            <div class="results-grid" id="category-products-grid">
+              <!-- Products will be dynamically added here -->
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- How It Works Section -->
+      <section class="page-section" id="how-it-works">
+        <div class="container">
+          <h1 style="text-align: center; margin: 40px 0">
+            How GiftGenius Works
+          </h1>
+          <div class="steps-container">
+            <div class="step">
+              <div class="step-number">1</div>
+              <div class="step-content">
+                <h3 class="step-title">Tell Us About the Recipient</h3>
+                <p class="step-description">
+                  Fill out our simple form with details about the person you're
+                  shopping for, including their interests, age, and the
+                  occasion.
+                </p>
+              </div>
+            </div>
+            <div class="step">
+              <div class="step-number">2</div>
+              <div class="step-content">
+                <h3 class="step-title">Set Your Budget</h3>
+                <p class="step-description">
+                  Choose your preferred price range, and we'll ensure all
+                  recommendations fit within your budget.
+                </p>
+              </div>
+            </div>
+            <div class="step">
+              <div class="step-number">3</div>
+              <div class="step-content">
+                <h3 class="step-title">Get Personalized Recommendations</h3>
+                <p class="step-description">
+                  Our AI analyzes the information and provides a curated list of
+                  gift ideas that match the recipient's interests and your
+                  budget.
+                </p>
+              </div>
+            </div>
+            <div class="step">
+              <div class="step-number">4</div>
+              <div class="step-content">
+                <h3 class="step-title">Choose and Purchase</h3>
+                <p class="step-description">
+                  Browse through the recommendations, read reviews, and select
+                  the perfect gift. We'll guide you to trusted retailers where
+                  you can make your purchase.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- About Us Section -->
+      <section class="page-section" id="about">
+        <div class="container">
+          <h1 style="text-align: center; margin: 40px 0">About GiftGenius</h1>
+          <div class="about-content">
+            <div class="about-section">
+              <h2>Our Mission</h2>
+              <p>
+                At GiftGenius, we believe that finding the perfect gift should
+                be an enjoyable experience, not a stressful one. Our mission is
+                to help people discover thoughtful, personalized gifts that
+                create lasting memories and strengthen relationships.
+              </p>
+            </div>
+            <div class="about-section">
+              <h2>Our Story</h2>
+              <p>
+                GiftGenius was born from a simple yet powerful idea: making
+                gift-giving easier and more meaningful. Our journey began when a
+                group of passionate individuals recognized the universal
+                challenge of finding the perfect gift. We combined our expertise
+                in technology and gift-giving to create an AI-powered platform
+                that takes the guesswork out of gift selection. Today,
+                GiftGenius helps thousands of people find thoughtful,
+                personalized gifts that create lasting memories and strengthen
+                relationships.
+              </p>
+            </div>
+            <div class="about-section">
+              <h2>Our Team</h2>
+              <div class="team-grid">
+                <div class="team-member">
+                  <img
+                    src="https://picsum.photos/150/150?random=1"
+                    alt="Team Member"
+                  />
+                  <h3>Avinash Mishra</h3>
+                  <p>Team Leader</p>
+                </div>
+                <div class="team-member">
+                  <img
+                    src="https://picsum.photos/150/150?random=2"
+                    alt="Team Member"
+                  />
+                  <h3>Mobashshir</h3>
+                  <p>Member 1</p>
+                </div>
+                <div class="team-member">
+                  <img
+                    src="https://picsum.photos/150/150?random=3"
+                    alt="Team Member"
+                  />
+                  <h3>Gyanendra Dubey</h3>
+                  <p>Member 2</p>
+                </div>
+                <div class="team-member">
+                  <img
+                    src="https://picsum.photos/150/150?random=4"
+                    alt="Team Member"
+                  />
+                  <h3>Shashwat Shukla</h3>
+                  <p>Member 3</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
     </div>
 
     <footer>
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-col">
-                    <h3>GiftGenius</h3>
-                    <p>Using AI to connect people with thoughtful, personalized gifts that create lasting memories.</p>
-                </div>
-                <div class="footer-col">
-                    <h3>Quick Links</h3>
-                    <ul>
-                        <li><a href="#" data-page="home">Home</a></li>
-                        <li><a href="#" data-page="about">About Us</a></li>
-                        <li><a href="#" data-page="how-it-works">How It Works</a></li>
-                        <li><a href="#" data-page="categories">Gift Categories</a></li>
-                    </ul>
-                </div>
-                <div class="footer-col">
-                    <h3>Support</h3>
-                    <ul>
-                        <li><a href="#" onclick="openContactModal(); return false;">Contact Us</a></li>
-                        <li><a href="#" onclick="openFaqModal(); return false;">FAQ</a></li>
-                        <li><a href="#" onclick="openPrivacyModal(); return false;">Privacy Policy</a></li>
-                        <li><a href="#" onclick="openTermsModal(); return false;">Terms of Service</a></li>
-                    </ul>
-                </div>
-                <div class="footer-col">
-                    <h3>Connect With Us</h3>
-                    <ul>
-                        <li><a href="https://www.facebook.com/acpce.org" target="_blank" rel="noopener noreferrer" onclick="window.open(this.href, '_blank'); return false;">Facebook</a></li>
-                        <li><a href="https://www.instagram.com/acpceofficial/?hl=en" target="_blank" rel="noopener noreferrer" onclick="window.open(this.href, '_blank'); return false;">Instagram</a></li>
-                        <li><a href="https://wa.me/919869782468" target="_blank" rel="noopener noreferrer" onclick="window.open(this.href, '_blank'); return false;">WhatsApp</a></li>
-                        <li><a href="https://www.linkedin.com/company/acpce" target="_blank" rel="noopener noreferrer" onclick="window.open(this.href, '_blank'); return false;">LinkedIn</a></li>
-                    </ul>
-                </div>
-            </div>
-            <div class="copyright">
-                &copy; 2025 GiftGenius. All rights reserved.
-            </div>
+      <div class="container">
+        <div class="footer-content">
+          <div class="footer-col">
+            <h3>GiftGenius</h3>
+            <p>
+              Using AI to connect people with thoughtful, personalized gifts
+              that create lasting memories.
+            </p>
+          </div>
+          <div class="footer-col">
+            <h3>Quick Links</h3>
+            <ul>
+              <li><a href="#" data-page="home">Home</a></li>
+              <li><a href="#" data-page="about">About Us</a></li>
+              <li><a href="#" data-page="how-it-works">How It Works</a></li>
+              <li><a href="#" data-page="categories">Gift Categories</a></li>
+            </ul>
+          </div>
+          <div class="footer-col">
+            <h3>Support</h3>
+            <ul>
+              <li>
+                <a href="#" onclick="openContactModal(); return false;"
+                  >Contact Us</a
+                >
+              </li>
+              <li>
+                <a href="#" onclick="openFaqModal(); return false;">FAQ</a>
+              </li>
+              <li>
+                <a href="#" onclick="openPrivacyModal(); return false;"
+                  >Privacy Policy</a
+                >
+              </li>
+              <li>
+                <a href="#" onclick="openTermsModal(); return false;"
+                  >Terms of Service</a
+                >
+              </li>
+            </ul>
+          </div>
+          <div class="footer-col">
+            <h3>Connect With Us</h3>
+            <ul>
+              <li>
+                <a
+                  href="https://www.facebook.com/acpce.org"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onclick="window.open(this.href, '_blank'); return false;"
+                  >Facebook</a
+                >
+              </li>
+              <li>
+                <a
+                  href="https://www.instagram.com/acpceofficial/?hl=en"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onclick="window.open(this.href, '_blank'); return false;"
+                  >Instagram</a
+                >
+              </li>
+              <li>
+                <a
+                  href="https://wa.me/919869782468"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onclick="window.open(this.href, '_blank'); return false;"
+                  >WhatsApp</a
+                >
+              </li>
+              <li>
+                <a
+                  href="https://www.linkedin.com/company/acpce"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onclick="window.open(this.href, '_blank'); return false;"
+                  >LinkedIn</a
+                >
+              </li>
+            </ul>
+          </div>
         </div>
+        <div class="copyright">
+          &copy; 2025 GiftGenius. All rights reserved.
+        </div>
+      </div>
     </footer>
 
     <!-- Sign Up Modal -->
     <div class="modal-overlay" id="signupModal">
-        <div class="modal">
-            <button class="close-modal" onclick="closeSignupModal()">&times;</button>
-            <div class="modal-header">
-                <h2>Create Your Account</h2>
-                <p>Join GiftGenius to discover perfect gifts for your loved ones</p>
-            </div>
-            <form class="signup-form" onsubmit="handleSignup(event)">
-                <div class="form-field">
-                    <input type="text" id="fullName" placeholder=" " required>
-                    <label for="fullName">Full Name</label>
-                </div>
-                <div class="form-field">
-                    <input type="email" id="signupEmail" placeholder=" " required>
-                    <label for="signupEmail">Email Address</label>
-                </div>
-                <div class="form-field">
-                    <input type="password" id="signupPassword" placeholder=" " required>
-                    <label for="signupPassword">Password</label>
-                </div>
-                <button type="submit" class="signup-button">Create Account</button>
-            </form>
-            <div class="social-signup">
-                <p>Or sign up with</p>
-                <div class="social-buttons">
-                    <button class="social-button">
-                        <img src="https://cdn-icons-png.flaticon.com/512/2991/2991148.png" alt="Google">
-                        Google
-                    </button>
-                    <button class="social-button">
-                        <img src="https://cdn-icons-png.flaticon.com/512/5968/5968764.png" alt="Facebook">
-                        Facebook
-                    </button>
-                </div>
-            </div>
-            <div class="auth-switch">
-                Already have an account? <a href="#" onclick="switchToLogin(event)">Log In</a>
-            </div>
+      <div class="modal">
+        <button class="close-modal" onclick="closeSignupModal()">
+          &times;
+        </button>
+        <div class="modal-header">
+          <h2>Create Your Account</h2>
+          <p>Join GiftGenius to discover perfect gifts for your loved ones</p>
         </div>
+        <form class="signup-form" onsubmit="handleSignup(event)">
+          <div class="form-field">
+            <input type="text" id="fullName" placeholder=" " required />
+            <label for="fullName">Full Name</label>
+          </div>
+          <div class="form-field">
+            <input type="email" id="signupEmail" placeholder=" " required />
+            <label for="signupEmail">Email Address</label>
+          </div>
+          <div class="form-field">
+            <input
+              type="password"
+              id="signupPassword"
+              placeholder=" "
+              required
+            />
+            <label for="signupPassword">Password</label>
+          </div>
+          <button type="submit" class="signup-button">Create Account</button>
+        </form>
+        <div class="social-signup">
+          <p>Or sign up with</p>
+          <div class="social-buttons">
+            <button class="social-button">
+              <img
+                src="https://cdn-icons-png.flaticon.com/512/2991/2991148.png"
+                alt="Google"
+              />
+              Google
+            </button>
+            <button class="social-button">
+              <img
+                src="https://cdn-icons-png.flaticon.com/512/5968/5968764.png"
+                alt="Facebook"
+              />
+              Facebook
+            </button>
+          </div>
+        </div>
+        <div class="auth-switch">
+          Already have an account?
+          <a href="#" onclick="switchToLogin(event)">Log In</a>
+        </div>
+      </div>
     </div>
 
     <!-- Login Modal -->
     <div class="modal-overlay" id="loginModal">
-        <div class="modal">
-            <button class="close-modal" onclick="closeLoginModal()">&times;</button>
-            <div class="modal-header">
-                <h2>Welcome Back!</h2>
-                <p>Log in to continue your gift-giving journey</p>
-            </div>
-            <form class="signup-form" onsubmit="handleLogin(event)">
-                <div class="form-field">
-                    <input type="email" id="loginEmail" placeholder=" " required>
-                    <label for="loginEmail">Email Address</label>
-                </div>
-                <div class="form-field">
-                    <input type="password" id="loginPassword" placeholder=" " required>
-                    <label for="loginPassword">Password</label>
-                </div>
-                <div class="form-options">
-                    <label class="remember-me">
-                        <input type="checkbox" id="rememberMe">
-                        Remember me
-                    </label>
-                    <a href="#" class="forgot-password">Forgot Password?</a>
-                </div>
-                <button type="submit" class="signup-button">Log In</button>
-            </form>
-            <div class="social-signup">
-                <p>Or log in with</p>
-                <div class="social-buttons">
-                    <button class="social-button">
-                        <img src="https://cdn-icons-png.flaticon.com/512/2991/2991148.png" alt="Google">
-                        Google
-                    </button>
-                    <button class="social-button">
-                        <img src="https://cdn-icons-png.flaticon.com/512/5968/5968764.png" alt="Facebook">
-                        Facebook
-                    </button>
-                </div>
-            </div>
-            <div class="auth-switch">
-                Don't have an account? <a href="#" onclick="switchToSignup(event)">Sign Up</a>
-            </div>
+      <div class="modal">
+        <button class="close-modal" onclick="closeLoginModal()">&times;</button>
+        <div class="modal-header">
+          <h2>Welcome Back!</h2>
+          <p>Log in to continue your gift-giving journey</p>
         </div>
+        <form class="signup-form" onsubmit="handleLogin(event)">
+          <div class="form-field">
+            <input type="email" id="loginEmail" placeholder=" " required />
+            <label for="loginEmail">Email Address</label>
+          </div>
+          <div class="form-field">
+            <input
+              type="password"
+              id="loginPassword"
+              placeholder=" "
+              required
+            />
+            <label for="loginPassword">Password</label>
+          </div>
+          <div class="form-options">
+            <label class="remember-me">
+              <input type="checkbox" id="rememberMe" />
+              Remember me
+            </label>
+            <a href="#" class="forgot-password">Forgot Password?</a>
+          </div>
+          <button type="submit" class="signup-button">Log In</button>
+        </form>
+        <div class="social-signup">
+          <p>Or log in with</p>
+          <div class="social-buttons">
+            <button class="social-button">
+              <img
+                src="https://cdn-icons-png.flaticon.com/512/2991/2991148.png"
+                alt="Google"
+              />
+              Google
+            </button>
+            <button class="social-button">
+              <img
+                src="https://cdn-icons-png.flaticon.com/512/5968/5968764.png"
+                alt="Facebook"
+              />
+              Facebook
+            </button>
+          </div>
+        </div>
+        <div class="auth-switch">
+          Don't have an account?
+          <a href="#" onclick="switchToSignup(event)">Sign Up</a>
+        </div>
+      </div>
     </div>
 
     <!-- Forgot Password Modal -->
     <div class="modal-overlay" id="forgotPasswordModal">
-        <div class="modal">
-            <button class="close-modal" onclick="closeForgotPasswordModal()">&times;</button>
-            <div class="modal-header">
-                <h2>Reset Password</h2>
-                <p>Enter your email address to receive password reset instructions</p>
-            </div>
-            <form class="signup-form" onsubmit="handleForgotPassword(event)">
-                <div class="form-field">
-                    <input type="email" id="resetEmail" placeholder=" " required>
-                    <label for="resetEmail">Email Address</label>
-                </div>
-                <button type="submit" class="signup-button">Send Reset Link</button>
-            </form>
-            <div class="auth-switch">
-                Remember your password? <a href="#" onclick="switchToLogin(event)">Log In</a>
-            </div>
+      <div class="modal">
+        <button class="close-modal" onclick="closeForgotPasswordModal()">
+          &times;
+        </button>
+        <div class="modal-header">
+          <h2>Reset Password</h2>
+          <p>Enter your email address to receive password reset instructions</p>
         </div>
+        <form class="signup-form" onsubmit="handleForgotPassword(event)">
+          <div class="form-field">
+            <input type="email" id="resetEmail" placeholder=" " required />
+            <label for="resetEmail">Email Address</label>
+          </div>
+          <button type="submit" class="signup-button">Send Reset Link</button>
+        </form>
+        <div class="auth-switch">
+          Remember your password?
+          <a href="#" onclick="switchToLogin(event)">Log In</a>
+        </div>
+      </div>
     </div>
 
     <!-- Support Section Modals -->
     <div class="modal-overlay" id="contactModal">
-        <div class="modal">
-            <button class="close-modal" onclick="closeContactModal()">&times;</button>
-            <div class="modal-header">
-                <h2>Contact Us</h2>
-                <p>Get in touch with our support team</p>
-            </div>
-            <form class="signup-form" onsubmit="handleContact(event)">
-                <div class="form-field">
-                    <input type="text" id="contactName" placeholder=" " required>
-                    <label for="contactName">Your Name</label>
-                </div>
-                <div class="form-field">
-                    <input type="email" id="contactEmail" placeholder=" " required>
-                    <label for="contactEmail">Email Address</label>
-                </div>
-                <div class="form-field">
-                    <input type="text" id="contactSubject" placeholder=" " required>
-                    <label for="contactSubject">Subject</label>
-                </div>
-                <div class="form-field">
-                    <textarea id="contactMessage" placeholder=" " required style="height: 150px; resize: none;"></textarea>
-                    <label for="contactMessage">Message</label>
-                </div>
-                <button type="submit" class="signup-button">Send Message</button>
-            </form>
+      <div class="modal">
+        <button class="close-modal" onclick="closeContactModal()">
+          &times;
+        </button>
+        <div class="modal-header">
+          <h2>Contact Us</h2>
+          <p>Get in touch with our support team</p>
         </div>
+        <form class="signup-form" onsubmit="handleContact(event)">
+          <div class="form-field">
+            <input type="text" id="contactName" placeholder=" " required />
+            <label for="contactName">Your Name</label>
+          </div>
+          <div class="form-field">
+            <input type="email" id="contactEmail" placeholder=" " required />
+            <label for="contactEmail">Email Address</label>
+          </div>
+          <div class="form-field">
+            <input type="text" id="contactSubject" placeholder=" " required />
+            <label for="contactSubject">Subject</label>
+          </div>
+          <div class="form-field">
+            <textarea
+              id="contactMessage"
+              placeholder=" "
+              required
+              style="height: 150px; resize: none"
+            ></textarea>
+            <label for="contactMessage">Message</label>
+          </div>
+          <button type="submit" class="signup-button">Send Message</button>
+        </form>
+      </div>
     </div>
 
     <div class="modal-overlay" id="faqModal">
-        <div class="modal">
-            <button class="close-modal" onclick="closeFaqModal()">&times;</button>
-            <div class="modal-header">
-                <h2>Frequently Asked Questions</h2>
-                <p>Find answers to common questions about GiftGenius</p>
-            </div>
-            <div class="faq-content">
-                <div class="faq-item">
-                    <h3>How does GiftGenius work?</h3>
-                    <p>GiftGenius uses AI to analyze recipient details and preferences to suggest personalized gift ideas. Simply fill out our form with information about the recipient, and we'll provide curated recommendations.</p>
-                </div>
-                <div class="faq-item">
-                    <h3>Are the gift recommendations accurate?</h3>
-                    <p>Yes! Our AI system considers multiple factors including interests, age, occasion, and budget to provide relevant suggestions. We also regularly update our database with trending gifts.</p>
-                </div>
-                <div class="faq-item">
-                    <h3>Do you sell the gifts directly?</h3>
-                    <p>No, we don't sell gifts directly. We provide recommendations and link you to trusted retailers like Amazon where you can make your purchase.</p>
-                </div>
-                <div class="faq-item">
-                    <h3>Is my information secure?</h3>
-                    <p>Yes, we take your privacy seriously. All personal information is encrypted and stored securely. We never share your data with third parties.</p>
-                </div>
-            </div>
+      <div class="modal">
+        <button class="close-modal" onclick="closeFaqModal()">&times;</button>
+        <div class="modal-header">
+          <h2>Frequently Asked Questions</h2>
+          <p>Find answers to common questions about GiftGenius</p>
         </div>
+        <div class="faq-content">
+          <div class="faq-item">
+            <h3>How does GiftGenius work?</h3>
+            <p>
+              GiftGenius uses AI to analyze recipient details and preferences to
+              suggest personalized gift ideas. Simply fill out our form with
+              information about the recipient, and we'll provide curated
+              recommendations.
+            </p>
+          </div>
+          <div class="faq-item">
+            <h3>Are the gift recommendations accurate?</h3>
+            <p>
+              Yes! Our AI system considers multiple factors including interests,
+              age, occasion, and budget to provide relevant suggestions. We also
+              regularly update our database with trending gifts.
+            </p>
+          </div>
+          <div class="faq-item">
+            <h3>Do you sell the gifts directly?</h3>
+            <p>
+              No, we don't sell gifts directly. We provide recommendations and
+              link you to trusted retailers like Amazon where you can make your
+              purchase.
+            </p>
+          </div>
+          <div class="faq-item">
+            <h3>Is my information secure?</h3>
+            <p>
+              Yes, we take your privacy seriously. All personal information is
+              encrypted and stored securely. We never share your data with third
+              parties.
+            </p>
+          </div>
+        </div>
+      </div>
     </div>
 
     <div class="modal-overlay" id="privacyModal">
-        <div class="modal">
-            <button class="close-modal" onclick="closePrivacyModal()">&times;</button>
-            <div class="modal-header">
-                <h2>Privacy Policy</h2>
-                <p>How we handle and protect your information</p>
-            </div>
-            <div class="policy-content">
-                <h3>Information We Collect</h3>
-                <p>We collect information that you provide directly to us, including:</p>
-                <ul>
-                    <li>Account information (name, email, password)</li>
-                    <li>Gift recipient details</li>
-                    <li>Purchase history</li>
-                </ul>
-                
-                <h3>How We Use Your Information</h3>
-                <p>We use the information we collect to:</p>
-                <ul>
-                    <li>Provide personalized gift recommendations</li>
-                    <li>Improve our services</li>
-                    <li>Communicate with you about our services</li>
-                </ul>
-                
-                <h3>Data Security</h3>
-                <p>We implement appropriate security measures to protect your personal information from unauthorized access, alteration, disclosure, or destruction.</p>
-            </div>
+      <div class="modal">
+        <button class="close-modal" onclick="closePrivacyModal()">
+          &times;
+        </button>
+        <div class="modal-header">
+          <h2>Privacy Policy</h2>
+          <p>How we handle and protect your information</p>
         </div>
+        <div class="policy-content">
+          <h3>Information We Collect</h3>
+          <p>
+            We collect information that you provide directly to us, including:
+          </p>
+          <ul>
+            <li>Account information (name, email, password)</li>
+            <li>Gift recipient details</li>
+            <li>Purchase history</li>
+          </ul>
+
+          <h3>How We Use Your Information</h3>
+          <p>We use the information we collect to:</p>
+          <ul>
+            <li>Provide personalized gift recommendations</li>
+            <li>Improve our services</li>
+            <li>Communicate with you about our services</li>
+          </ul>
+
+          <h3>Data Security</h3>
+          <p>
+            We implement appropriate security measures to protect your personal
+            information from unauthorized access, alteration, disclosure, or
+            destruction.
+          </p>
+        </div>
+      </div>
     </div>
 
     <div class="modal-overlay" id="termsModal">
-        <div class="modal">
-            <button class="close-modal" onclick="closeTermsModal()">&times;</button>
-            <div class="modal-header">
-                <h2>Terms of Service</h2>
-                <p>Please read these terms carefully before using GiftGenius</p>
-            </div>
-            <div class="terms-content">
-                <h3>1. Acceptance of Terms</h3>
-                <p>By accessing and using GiftGenius, you agree to be bound by these Terms of Service.</p>
-                
-                <h3>2. Use License</h3>
-                <p>Permission is granted to temporarily access GiftGenius for personal, non-commercial use only.</p>
-                
-                <h3>3. Disclaimer</h3>
-                <p>The gift recommendations provided are suggestions only. We are not responsible for the quality or availability of products from third-party retailers.</p>
-                
-                <h3>4. Limitations</h3>
-                <p>GiftGenius shall not be liable for any damages arising from the use or inability to use our service.</p>
-            </div>
+      <div class="modal">
+        <button class="close-modal" onclick="closeTermsModal()">&times;</button>
+        <div class="modal-header">
+          <h2>Terms of Service</h2>
+          <p>Please read these terms carefully before using GiftGenius</p>
         </div>
+        <div class="terms-content">
+          <h3>1. Acceptance of Terms</h3>
+          <p>
+            By accessing and using GiftGenius, you agree to be bound by these
+            Terms of Service.
+          </p>
+
+          <h3>2. Use License</h3>
+          <p>
+            Permission is granted to temporarily access GiftGenius for personal,
+            non-commercial use only.
+          </p>
+
+          <h3>3. Disclaimer</h3>
+          <p>
+            The gift recommendations provided are suggestions only. We are not
+            responsible for the quality or availability of products from
+            third-party retailers.
+          </p>
+
+          <h3>4. Limitations</h3>
+          <p>
+            GiftGenius shall not be liable for any damages arising from the use
+            or inability to use our service.
+          </p>
+        </div>
+      </div>
     </div>
 
     <style>
-        /* Add these styles for the new modals */
-        .faq-content, .policy-content, .terms-content {
-            max-height: 70vh;
-            overflow-y: auto;
-            padding: 20px;
-        }
+      /* Add these styles for the new modals */
+      .faq-content,
+      .policy-content,
+      .terms-content {
+        max-height: 70vh;
+        overflow-y: auto;
+        padding: 20px;
+      }
 
-        .faq-item {
-            margin-bottom: 30px;
-            padding: 20px;
-            background: var(--light-bg);
-            border-radius: 10px;
-        }
+      .faq-item {
+        margin-bottom: 30px;
+        padding: 20px;
+        background: var(--light-bg);
+        border-radius: 10px;
+      }
 
-        .faq-item h3 {
-            color: var(--primary);
-            margin-bottom: 10px;
-        }
+      .faq-item h3 {
+        color: var(--primary);
+        margin-bottom: 10px;
+      }
 
-        .faq-item p {
-            color: var(--text);
-            line-height: 1.6;
-        }
+      .faq-item p {
+        color: var(--text);
+        line-height: 1.6;
+      }
 
-        .policy-content h3, .terms-content h3 {
-            color: var(--primary);
-            margin: 20px 0 10px;
-        }
+      .policy-content h3,
+      .terms-content h3 {
+        color: var(--primary);
+        margin: 20px 0 10px;
+      }
 
-        .policy-content ul, .terms-content ul {
-            margin-left: 20px;
-            margin-bottom: 15px;
-        }
+      .policy-content ul,
+      .terms-content ul {
+        margin-left: 20px;
+        margin-bottom: 15px;
+      }
 
-        .policy-content li, .terms-content li {
-            margin-bottom: 5px;
-            color: var(--text);
-        }
+      .policy-content li,
+      .terms-content li {
+        margin-bottom: 5px;
+        color: var(--text);
+      }
 
-        .policy-content p, .terms-content p {
-            margin-bottom: 15px;
-            line-height: 1.6;
-        }
+      .policy-content p,
+      .terms-content p {
+        margin-bottom: 15px;
+        line-height: 1.6;
+      }
     </style>
 
     <script>
-        // Interest tags selection
-        const interestTags = document.querySelectorAll('.interest-tag');
-        
-        interestTags.forEach(tag => {
-            tag.addEventListener('click', function() {
-                this.classList.toggle('selected');
-            });
+      // Interest tags selection
+      const interestTags = document.querySelectorAll(".interest-tag");
+
+      interestTags.forEach((tag) => {
+        tag.addEventListener("click", function () {
+          this.classList.toggle("selected");
         });
-        
-        // Form submission
-        const giftForm = document.getElementById('gift-form');
-        const loadingSpinner = document.querySelector('.loading');
-        const resultsSection = document.getElementById('results-section');
-        
-        giftForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            // Show loading spinner
-            loadingSpinner.style.display = 'block';
-            resultsSection.style.display = 'none';
-            
-            // Simulate API call with timeout
-            setTimeout(function() {
-                loadingSpinner.style.display = 'none';
-                
-                // Generate sample gift results
-                generateSampleResults();
-                
-                // Show results section
-                resultsSection.style.display = 'block';
-                
-                // Scroll to results
-                resultsSection.scrollIntoView({ behavior: 'smooth' });
-            }, 2000);
-        });
-        
-        function generateSampleResults() {
-            const resultsGrid = document.querySelector('.results-grid');
-            resultsGrid.innerHTML = '';
-            
-            const selectedTags = document.querySelectorAll('.interest-tag.selected');
-            const interests = Array.from(selectedTags).map(tag => tag.textContent);
-            const budget = document.getElementById('price-range').value;
-            const occasion = document.getElementById('occasion').value;
-            const ageRange = document.getElementById('age-range').value;
-            
-            // Sample gift data based on form inputs
-            const sampleGifts = [
-                {
-                    title: "Sony WH-1000XM4 Wireless Headphones",
-                    price: "₹24,990",
-                    image: "https://picsum.photos/400/320",
-                    description: "Industry-leading noise cancellation with Dual Noise Sensor technology.",
-                    rating: 4.8,
-                    reviews: 2453,
-                    amazonLink: "https://www.amazon.in/Sony-WH-1000XM4-Cancelling-Headphones-Phantom/dp/B0863TXGM3/"
-                },
-                {
-                    title: "Starbucks House Blend Coffee",
-                    price: "₹1,499",
-                    image: "https://picsum.photos/400/320",
-                    description: "Premium Arabica coffee beans, medium roast, 250g.",
-                    rating: 4.7,
-                    reviews: 1822,
-                    amazonLink: "https://www.amazon.in/Starbucks-House-Blend-Coffee-250g/dp/B07P8QZ6KX/"
-                },
-                {
-                    title: "Personalized Star Map",
-                    price: "₹2,999",
-                    image: "https://picsum.photos/400/320",
-                    description: "Custom star map showing the night sky from any date and location.",
-                    rating: 4.9,
-                    reviews: 3128,
-                    amazonLink: "https://www.amazon.in/Personalized-Constellation-Star-Map-Print/dp/B08L5R1C3N/"
-                },
-                {
-                    title: "URBAN PLANTZ Hydroponic Plant Growing System",
-                    price: "₹1,499",
-                    image: "https://picsum.photos/400/320",
-                    description: "Self-watering indoor garden with LED grow lights.",
-                    rating: 4.6,
-                    reviews: 956,
-                    amazonLink: "https://www.amazon.in/URBAN-PLANTZ-Hydroponic-Plant-Growing/dp/B08L5R1C3N/"
-                },
-                {
-                    title: "Victrola Vintage 3-Speed Bluetooth Record Player",
-                    price: "₹5,999",
-                    image: "https://picsum.photos/400/320",
-                    description: "Modern record player with vintage design and built-in speakers.",
-                    rating: 4.5,
-                    reviews: 1254,
-                    amazonLink: "https://www.amazon.in/Victrola-Vintage-3-Speed-Bluetooth-Speakers/dp/B07P8QZ6KX/"
-                },
-                {
-                    title: "Leather Journal Writing Notebook",
-                    price: "₹1,299",
-                    image: "https://picsum.photos/400/320",
-                    description: "Premium leather-bound journal with 240 pages.",
-                    rating: 4.7,
-                    reviews: 892,
-                    amazonLink: "https://www.amazon.in/Leather-Journal-Writing-Notebook-Notepad/dp/B08L5R1C3N/"
-                }
-            ];
-            
-            // Render gift cards
-            sampleGifts.forEach(gift => {
-                const giftCard = document.createElement('div');
-                giftCard.className = 'gift-card';
-                giftCard.innerHTML = `
+      });
+
+      // Form submission
+      const giftForm = document.getElementById("gift-form");
+      const loadingSpinner = document.querySelector(".loading");
+      const resultsSection = document.getElementById("results-section");
+
+      giftForm.addEventListener("submit", function (e) {
+        e.preventDefault();
+
+        // Show loading spinner
+        loadingSpinner.style.display = "block";
+        resultsSection.style.display = "none";
+
+        // Simulate API call with timeout
+        setTimeout(function () {
+          loadingSpinner.style.display = "none";
+
+          // Generate sample gift results
+          generateSampleResults();
+
+          // Show results section
+          resultsSection.style.display = "block";
+
+          // Scroll to results
+          resultsSection.scrollIntoView({ behavior: "smooth" });
+        }, 2000);
+      });
+
+      function generateSampleResults() {
+        const resultsGrid = document.querySelector(".results-grid");
+        resultsGrid.innerHTML = "";
+
+        const selectedTags = document.querySelectorAll(
+          ".interest-tag.selected"
+        );
+        const interests = Array.from(selectedTags).map(
+          (tag) => tag.textContent
+        );
+        const budget = document.getElementById("price-range").value;
+        const occasion = document.getElementById("occasion").value;
+        const ageRange = document.getElementById("age-range").value;
+
+        // Sample gift data based on form inputs
+        const sampleGifts = [
+          {
+            title: "Sony WH-1000XM4 Wireless Headphones",
+            price: "₹24,990",
+            image: "https://picsum.photos/400/320",
+            description:
+              "Industry-leading noise cancellation with Dual Noise Sensor technology.",
+            rating: 4.8,
+            reviews: 2453,
+            amazonLink:
+              "https://www.amazon.in/Sony-WH-1000XM4-Cancelling-Headphones-Phantom/dp/B0863TXGM3/",
+          },
+          {
+            title: "Starbucks House Blend Coffee",
+            price: "₹1,499",
+            image: "https://picsum.photos/400/320",
+            description: "Premium Arabica coffee beans, medium roast, 250g.",
+            rating: 4.7,
+            reviews: 1822,
+            amazonLink:
+              "https://www.amazon.in/Starbucks-House-Blend-Coffee-250g/dp/B07P8QZ6KX/",
+          },
+          {
+            title: "Personalized Star Map",
+            price: "₹2,999",
+            image: "https://picsum.photos/400/320",
+            description:
+              "Custom star map showing the night sky from any date and location.",
+            rating: 4.9,
+            reviews: 3128,
+            amazonLink:
+              "https://www.amazon.in/Personalized-Constellation-Star-Map-Print/dp/B08L5R1C3N/",
+          },
+          {
+            title: "URBAN PLANTZ Hydroponic Plant Growing System",
+            price: "₹1,499",
+            image: "https://picsum.photos/400/320",
+            description: "Self-watering indoor garden with LED grow lights.",
+            rating: 4.6,
+            reviews: 956,
+            amazonLink:
+              "https://www.amazon.in/URBAN-PLANTZ-Hydroponic-Plant-Growing/dp/B08L5R1C3N/",
+          },
+          {
+            title: "Victrola Vintage 3-Speed Bluetooth Record Player",
+            price: "₹5,999",
+            image: "https://picsum.photos/400/320",
+            description:
+              "Modern record player with vintage design and built-in speakers.",
+            rating: 4.5,
+            reviews: 1254,
+            amazonLink:
+              "https://www.amazon.in/Victrola-Vintage-3-Speed-Bluetooth-Speakers/dp/B07P8QZ6KX/",
+          },
+          {
+            title: "Leather Journal Writing Notebook",
+            price: "₹1,299",
+            image: "https://picsum.photos/400/320",
+            description: "Premium leather-bound journal with 240 pages.",
+            rating: 4.7,
+            reviews: 892,
+            amazonLink:
+              "https://www.amazon.in/Leather-Journal-Writing-Notebook-Notepad/dp/B08L5R1C3N/",
+          },
+        ];
+
+        // Render gift cards
+        sampleGifts.forEach((gift) => {
+          const giftCard = document.createElement("div");
+          giftCard.className = "gift-card";
+          giftCard.innerHTML = `
                     <div class="gift-image">
                         <img src="${gift.image}" alt="${gift.title}">
                     </div>
@@ -2046,257 +2482,285 @@
                         <a href="${gift.amazonLink}" target="_blank" class="amazon-button">Buy on Amazon</a>
                     </div>
                 `;
-                resultsGrid.appendChild(giftCard);
-            });
-        }
+          resultsGrid.appendChild(giftCard);
+        });
+      }
 
-        // Navigation
-        document.querySelectorAll('.nav-links a, .footer-col a').forEach(link => {
-            link.addEventListener('click', function(e) {
-                e.preventDefault();
-                const targetPage = this.getAttribute('data-page');
-                navigateToPage(targetPage);
-            });
+      // Navigation
+      document
+        .querySelectorAll(".nav-links a, .footer-col a")
+        .forEach((link) => {
+          link.addEventListener("click", function (e) {
+            e.preventDefault();
+            const targetPage = this.getAttribute("data-page");
+            navigateToPage(targetPage);
+          });
         });
 
-        function navigateToPage(pageId) {
-            // First, fade out all sections
-            document.querySelectorAll('.page-section.active').forEach(section => {
-                section.style.opacity = '0';
-                section.style.transform = 'translateY(20px)';
-                
-                // Wait for fade out animation
-                setTimeout(() => {
-                    section.classList.remove('active');
-                    
-                    // Show and fade in the target section
-                    const targetSection = document.getElementById(pageId);
-                    targetSection.classList.add('active');
-                    
-                    // Force a reflow to ensure the transition works
-                    void targetSection.offsetWidth;
-                    
-                    targetSection.style.opacity = '1';
-                    targetSection.style.transform = 'translateY(0)';
-                }, 500); // Match this with the CSS transition duration
-            });
+      function navigateToPage(pageId) {
+        // First, fade out all sections
+        document.querySelectorAll(".page-section.active").forEach((section) => {
+          section.style.opacity = "0";
+          section.style.transform = "translateY(20px)";
 
-            // Update active nav link
-            document.querySelectorAll('.nav-links a').forEach(link => {
-                link.classList.remove('active');
-                if (link.getAttribute('data-page') === pageId) {
-                    link.classList.add('active');
-                }
-            });
-            
-            // Scroll to top of the page
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
+          // Wait for fade out animation
+          setTimeout(() => {
+            section.classList.remove("active");
 
-        function scrollToGiftFinder() {
-            const giftFinder = document.querySelector('.gift-finder');
-            giftFinder.scrollIntoView({ behavior: 'smooth' });
-        }
+            // Show and fade in the target section
+            const targetSection = document.getElementById(pageId);
+            targetSection.classList.add("active");
 
-        // Category Products Data
-        const categoryProducts = {
-            tech: [
-                {
-                    title: "Apple Watch Series 8",
-                    price: "₹41,999",
-                    image: "https://picsum.photos/400/320?random=10",
-                    description: "Advanced smartwatch with health tracking and notifications.",
-                    rating: 4.8,
-                    reviews: 1234,
-                    amazonLink: "https://www.amazon.in/Apple-Watch-Space-Grey-Aluminium/dp/B0BDJ6ZMCC/"
-                },
-                {
-                    title: "Apple AirPods Pro",
-                    price: "₹24,999",
-                    image: "https://picsum.photos/400/320?random=11",
-                    description: "Active noise cancellation and spatial audio.",
-                    rating: 4.6,
-                    reviews: 856,
-                    amazonLink: "https://www.amazon.in/Apple-AirPods-Pro-Active-Cancellation/dp/B0BDJ6ZMCC/"
-                },
-                {
-                    title: "Mi Power Bank 20000mAh",
-                    price: "₹1,999",
-                    image: "https://picsum.photos/400/320?random=12",
-                    description: "Fast charging power bank with dual USB ports.",
-                    rating: 4.7,
-                    reviews: 654,
-                    amazonLink: "https://www.amazon.in/Mi-Power-Bank-20000mAh-Black/dp/B0BDJ6ZMCC/"
-                }
-            ],
-            home: [
-                {
-                    title: "Philips Smart LED Bulb",
-                    price: "₹1,999",
-                    image: "https://picsum.photos/400/320?random=13",
-                    description: "WiFi-enabled LED bulb with 16 million colors.",
-                    rating: 4.5,
-                    reviews: 789,
-                    amazonLink: "https://www.amazon.in/Philips-WiFi-Enabled-Color-Changing-Bulb/dp/B0BDJ6ZMCC/"
-                },
-                {
-                    title: "Morphy Richards Coffee Maker",
-                    price: "₹4,999",
-                    image: "https://picsum.photos/400/320?random=14",
-                    description: "Programmable coffee maker with thermal carafe.",
-                    rating: 4.7,
-                    reviews: 432,
-                    amazonLink: "https://www.amazon.in/Morphy-Richards-Coffee-Maker-Black/dp/B0BDJ6ZMCC/"
-                },
-                {
-                    title: "Urban Ladder Throw Blanket",
-                    price: "₹1,999",
-                    image: "https://picsum.photos/400/320?random=15",
-                    description: "Soft and cozy throw blanket for any room.",
-                    rating: 4.6,
-                    reviews: 567,
-                    amazonLink: "https://www.amazon.in/Urban-Ladder-Throw-Blanket-Grey/dp/B0BDJ6ZMCC/"
-                }
-            ],
-            fashion: [
-                {
-                    title: "Urban Forest Leather Wallet",
-                    price: "₹1,999",
-                    image: "https://picsum.photos/400/320?random=16",
-                    description: "Genuine leather wallet with multiple card slots.",
-                    rating: 4.8,
-                    reviews: 234,
-                    amazonLink: "https://www.amazon.in/Urban-Forest-Leather-Wallet-Brown/dp/B0BDJ6ZMCC/"
-                },
-                {
-                    title: "Ray-Ban Aviator Sunglasses",
-                    price: "₹15,999",
-                    image: "https://picsum.photos/400/320?random=17",
-                    description: "Classic aviator style with UV protection.",
-                    rating: 4.7,
-                    reviews: 345,
-                    amazonLink: "https://www.amazon.in/Ray-Ban-Aviator-Sunglasses-Black/dp/B0BDJ6ZMCC/"
-                },
-                {
-                    title: "Allen Solly Silk Scarf",
-                    price: "₹1,999",
-                    image: "https://picsum.photos/400/320?random=18",
-                    description: "Elegant silk scarf with unique pattern.",
-                    rating: 4.6,
-                    reviews: 123,
-                    amazonLink: "https://www.amazon.in/Allen-Solly-Silk-Scarf-Purple/dp/B0BDJ6ZMCC/"
-                }
-            ],
-            sports: [
-                {
-                    title: "Decathlon Yoga Mat",
-                    price: "₹1,499",
-                    image: "https://picsum.photos/400/320?random=19",
-                    description: "Non-slip yoga mat with carrying strap.",
-                    rating: 4.7,
-                    reviews: 456,
-                    amazonLink: "https://www.amazon.in/Anti-Slip-Yoga-Mat-Carrying-Strap/dp/B07P8QZ6KX/"
-                },
-                {
-                    title: "Water Bottle",
-                    price: "₹2,499",
-                    image: "https://picsum.photos/400/320?random=20",
-                    description: "Insulated water bottle for sports.",
-                    rating: 4.8,
-                    reviews: 678,
-                    amazonLink: "https://www.amazon.in/Insulated-Water-Bottle-Sports-1000ml/dp/B08L5R1C3N/"
-                },
-                {
-                    title: "Sports Watch",
-                    price: "₹8,999",
-                    image: "https://picsum.photos/400/320?random=21",
-                    description: "Water-resistant sports watch with activity tracking.",
-                    rating: 4.6,
-                    reviews: 234,
-                    amazonLink: "https://www.amazon.in/Fitbit-Smartwatch-Activity-Tracking-Compatible/dp/B07P8QZ6KX/"
-                }
-            ],
-            health: [
-                {
-                    title: "Fitbit Charge 5",
-                    price: "₹24,999",
-                    image: "https://picsum.photos/400/320?random=22",
-                    description: "Advanced fitness tracker with heart rate monitoring and sleep tracking.",
-                    rating: 4.7,
-                    reviews: 789,
-                    amazonLink: "https://www.amazon.in/Fitbit-Charge-Advanced-Fitness-Tracker/dp/B09DFHJTF5/"
-                },
-                {
-                    title: "Philips Air Purifier",
-                    price: "₹12,999",
-                    image: "https://picsum.photos/400/320?random=23",
-                    description: "Air purifier with HEPA filter for clean indoor air.",
-                    rating: 4.6,
-                    reviews: 456,
-                    amazonLink: "https://www.amazon.in/Philips-Air-Purifier-HEPA-Filter/dp/B09DFHJTF5/"
-                },
-                {
-                    title: "Yoga Mat Premium",
-                    price: "₹1,999",
-                    image: "https://picsum.photos/400/320?random=24",
-                    description: "Non-slip yoga mat with carrying strap and alignment lines.",
-                    rating: 4.8,
-                    reviews: 234,
-                    amazonLink: "https://www.amazon.in/Premium-Yoga-Mat-Carrying-Strap/dp/B09DFHJTF5/"
-                }
-            ],
-            books: [
-                {
-                    title: "Kindle Paperwhite",
-                    price: "₹13,999",
-                    image: "https://picsum.photos/400/320?random=25",
-                    description: "Waterproof e-reader with built-in light and 8GB storage.",
-                    rating: 4.8,
-                    reviews: 1234,
-                    amazonLink: "https://www.amazon.in/Amazon-Kindle-Paperwhite-Waterproof-Storage/dp/B09DFHJTF5/"
-                },
-                {
-                    title: "Moleskine Classic Notebook",
-                    price: "₹1,999",
-                    image: "https://picsum.photos/400/320?random=26",
-                    description: "Hard cover notebook with premium paper quality.",
-                    rating: 4.7,
-                    reviews: 567,
-                    amazonLink: "https://www.amazon.in/Moleskine-Classic-Notebook-Hard-Cover/dp/B09DFHJTF5/"
-                },
-                {
-                    title: "Faber-Castell Pencil Set",
-                    price: "₹999",
-                    image: "https://picsum.photos/400/320?random=27",
-                    description: "Professional drawing pencil set with 12 different grades.",
-                    rating: 4.6,
-                    reviews: 345,
-                    amazonLink: "https://www.amazon.in/Faber-Castell-Drawing-Pencil-Set/dp/B09DFHJTF5/"
-                }
-            ]
-        };
+            // Force a reflow to ensure the transition works
+            void targetSection.offsetWidth;
 
-        function showCategoryProducts(category) {
-            // Hide categories grid
-            document.querySelector('.categories-grid').style.display = 'none';
-            
-            // Show products section
-            const productsSection = document.getElementById('category-products');
-            productsSection.style.display = 'block';
-            
-            // Set category title
-            const categoryTitle = document.getElementById('category-title');
-            categoryTitle.textContent = document.querySelector(`[onclick="showCategoryProducts('${category}')"]`).closest('.category-card').querySelector('.category-title').textContent;
-            
-            // Get products grid
-            const productsGrid = document.getElementById('category-products-grid');
-            productsGrid.innerHTML = '';
-            
-            // Add products
-            categoryProducts[category].forEach(product => {
-                const productCard = document.createElement('div');
-                productCard.className = 'gift-card';
-                productCard.innerHTML = `
+            targetSection.style.opacity = "1";
+            targetSection.style.transform = "translateY(0)";
+          }, 500); // Match this with the CSS transition duration
+        });
+
+        // Update active nav link
+        document.querySelectorAll(".nav-links a").forEach((link) => {
+          link.classList.remove("active");
+          if (link.getAttribute("data-page") === pageId) {
+            link.classList.add("active");
+          }
+        });
+
+        // Scroll to top of the page
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+
+      function scrollToGiftFinder() {
+        const giftFinder = document.querySelector(".gift-finder");
+        giftFinder.scrollIntoView({ behavior: "smooth" });
+      }
+
+      // Category Products Data
+      const categoryProducts = {
+        tech: [
+          {
+            title: "Apple Watch Series 8",
+            price: "₹41,999",
+            image: "https://picsum.photos/400/320?random=10",
+            description:
+              "Advanced smartwatch with health tracking and notifications.",
+            rating: 4.8,
+            reviews: 1234,
+            amazonLink:
+              "https://www.amazon.in/Apple-Watch-Space-Grey-Aluminium/dp/B0BDJ6ZMCC/",
+          },
+          {
+            title: "Apple AirPods Pro",
+            price: "₹24,999",
+            image: "https://picsum.photos/400/320?random=11",
+            description: "Active noise cancellation and spatial audio.",
+            rating: 4.6,
+            reviews: 856,
+            amazonLink:
+              "https://www.amazon.in/Apple-AirPods-Pro-Active-Cancellation/dp/B0BDJ6ZMCC/",
+          },
+          {
+            title: "Mi Power Bank 20000mAh",
+            price: "₹1,999",
+            image: "https://picsum.photos/400/320?random=12",
+            description: "Fast charging power bank with dual USB ports.",
+            rating: 4.7,
+            reviews: 654,
+            amazonLink:
+              "https://www.amazon.in/Mi-Power-Bank-20000mAh-Black/dp/B0BDJ6ZMCC/",
+          },
+        ],
+        home: [
+          {
+            title: "Philips Smart LED Bulb",
+            price: "₹1,999",
+            image: "https://picsum.photos/400/320?random=13",
+            description: "WiFi-enabled LED bulb with 16 million colors.",
+            rating: 4.5,
+            reviews: 789,
+            amazonLink:
+              "https://www.amazon.in/Philips-WiFi-Enabled-Color-Changing-Bulb/dp/B0BDJ6ZMCC/",
+          },
+          {
+            title: "Morphy Richards Coffee Maker",
+            price: "₹4,999",
+            image: "https://picsum.photos/400/320?random=14",
+            description: "Programmable coffee maker with thermal carafe.",
+            rating: 4.7,
+            reviews: 432,
+            amazonLink:
+              "https://www.amazon.in/Morphy-Richards-Coffee-Maker-Black/dp/B0BDJ6ZMCC/",
+          },
+          {
+            title: "Urban Ladder Throw Blanket",
+            price: "₹1,999",
+            image: "https://picsum.photos/400/320?random=15",
+            description: "Soft and cozy throw blanket for any room.",
+            rating: 4.6,
+            reviews: 567,
+            amazonLink:
+              "https://www.amazon.in/Urban-Ladder-Throw-Blanket-Grey/dp/B0BDJ6ZMCC/",
+          },
+        ],
+        fashion: [
+          {
+            title: "Urban Forest Leather Wallet",
+            price: "₹1,999",
+            image: "https://picsum.photos/400/320?random=16",
+            description: "Genuine leather wallet with multiple card slots.",
+            rating: 4.8,
+            reviews: 234,
+            amazonLink:
+              "https://www.amazon.in/Urban-Forest-Leather-Wallet-Brown/dp/B0BDJ6ZMCC/",
+          },
+          {
+            title: "Ray-Ban Aviator Sunglasses",
+            price: "₹15,999",
+            image: "https://picsum.photos/400/320?random=17",
+            description: "Classic aviator style with UV protection.",
+            rating: 4.7,
+            reviews: 345,
+            amazonLink:
+              "https://www.amazon.in/Ray-Ban-Aviator-Sunglasses-Black/dp/B0BDJ6ZMCC/",
+          },
+          {
+            title: "Allen Solly Silk Scarf",
+            price: "₹1,999",
+            image: "https://picsum.photos/400/320?random=18",
+            description: "Elegant silk scarf with unique pattern.",
+            rating: 4.6,
+            reviews: 123,
+            amazonLink:
+              "https://www.amazon.in/Allen-Solly-Silk-Scarf-Purple/dp/B0BDJ6ZMCC/",
+          },
+        ],
+        sports: [
+          {
+            title: "Decathlon Yoga Mat",
+            price: "₹1,499",
+            image: "https://picsum.photos/400/320?random=19",
+            description: "Non-slip yoga mat with carrying strap.",
+            rating: 4.7,
+            reviews: 456,
+            amazonLink:
+              "https://www.amazon.in/Anti-Slip-Yoga-Mat-Carrying-Strap/dp/B07P8QZ6KX/",
+          },
+          {
+            title: "Water Bottle",
+            price: "₹2,499",
+            image: "https://picsum.photos/400/320?random=20",
+            description: "Insulated water bottle for sports.",
+            rating: 4.8,
+            reviews: 678,
+            amazonLink:
+              "https://www.amazon.in/Insulated-Water-Bottle-Sports-1000ml/dp/B08L5R1C3N/",
+          },
+          {
+            title: "Sports Watch",
+            price: "₹8,999",
+            image: "https://picsum.photos/400/320?random=21",
+            description: "Water-resistant sports watch with activity tracking.",
+            rating: 4.6,
+            reviews: 234,
+            amazonLink:
+              "https://www.amazon.in/Fitbit-Smartwatch-Activity-Tracking-Compatible/dp/B07P8QZ6KX/",
+          },
+        ],
+        health: [
+          {
+            title: "Fitbit Charge 5",
+            price: "₹24,999",
+            image: "https://picsum.photos/400/320?random=22",
+            description:
+              "Advanced fitness tracker with heart rate monitoring and sleep tracking.",
+            rating: 4.7,
+            reviews: 789,
+            amazonLink:
+              "https://www.amazon.in/Fitbit-Charge-Advanced-Fitness-Tracker/dp/B09DFHJTF5/",
+          },
+          {
+            title: "Philips Air Purifier",
+            price: "₹12,999",
+            image: "https://picsum.photos/400/320?random=23",
+            description: "Air purifier with HEPA filter for clean indoor air.",
+            rating: 4.6,
+            reviews: 456,
+            amazonLink:
+              "https://www.amazon.in/Philips-Air-Purifier-HEPA-Filter/dp/B09DFHJTF5/",
+          },
+          {
+            title: "Yoga Mat Premium",
+            price: "₹1,999",
+            image: "https://picsum.photos/400/320?random=24",
+            description:
+              "Non-slip yoga mat with carrying strap and alignment lines.",
+            rating: 4.8,
+            reviews: 234,
+            amazonLink:
+              "https://www.amazon.in/Premium-Yoga-Mat-Carrying-Strap/dp/B09DFHJTF5/",
+          },
+        ],
+        books: [
+          {
+            title: "Kindle Paperwhite",
+            price: "₹13,999",
+            image: "https://picsum.photos/400/320?random=25",
+            description:
+              "Waterproof e-reader with built-in light and 8GB storage.",
+            rating: 4.8,
+            reviews: 1234,
+            amazonLink:
+              "https://www.amazon.in/Amazon-Kindle-Paperwhite-Waterproof-Storage/dp/B09DFHJTF5/",
+          },
+          {
+            title: "Moleskine Classic Notebook",
+            price: "₹1,999",
+            image: "https://picsum.photos/400/320?random=26",
+            description: "Hard cover notebook with premium paper quality.",
+            rating: 4.7,
+            reviews: 567,
+            amazonLink:
+              "https://www.amazon.in/Moleskine-Classic-Notebook-Hard-Cover/dp/B09DFHJTF5/",
+          },
+          {
+            title: "Faber-Castell Pencil Set",
+            price: "₹999",
+            image: "https://picsum.photos/400/320?random=27",
+            description:
+              "Professional drawing pencil set with 12 different grades.",
+            rating: 4.6,
+            reviews: 345,
+            amazonLink:
+              "https://www.amazon.in/Faber-Castell-Drawing-Pencil-Set/dp/B09DFHJTF5/",
+          },
+        ],
+      };
+
+      function showCategoryProducts(category) {
+        // Hide categories grid
+        document.querySelector(".categories-grid").style.display = "none";
+
+        // Show products section
+        const productsSection = document.getElementById("category-products");
+        productsSection.style.display = "block";
+
+        // Set category title
+        const categoryTitle = document.getElementById("category-title");
+        categoryTitle.textContent = document
+          .querySelector(`[onclick="showCategoryProducts('${category}')"]`)
+          .closest(".category-card")
+          .querySelector(".category-title").textContent;
+
+        // Get products grid
+        const productsGrid = document.getElementById("category-products-grid");
+        productsGrid.innerHTML = "";
+
+        // Add products
+        categoryProducts[category].forEach((product) => {
+          const productCard = document.createElement("div");
+          productCard.className = "gift-card";
+          productCard.innerHTML = `
                     <div class="gift-image">
                         <img src="${product.image}" alt="${product.title}">
                     </div>
@@ -2313,314 +2777,394 @@
                         <a href="${product.amazonLink}" target="_blank" class="amazon-button">Buy on Amazon</a>
                     </div>
                 `;
-                productsGrid.appendChild(productCard);
-            });
-        }
-
-        function hideCategoryProducts() {
-            // Hide products section
-            document.getElementById('category-products').style.display = 'none';
-            
-            // Show categories grid
-            document.querySelector('.categories-grid').style.display = 'grid';
-        }
-
-        // Auth Modal Functions
-        function openSignupModal() {
-            document.getElementById('signupModal').style.display = 'block';
-            document.getElementById('loginModal').style.display = 'none';
-            document.body.style.overflow = 'hidden';
-        }
-        
-        function closeSignupModal() {
-            document.getElementById('signupModal').style.display = 'none';
-            document.body.style.overflow = 'auto';
-        }
-        
-        function openLoginModal() {
-            document.getElementById('loginModal').style.display = 'block';
-            document.getElementById('signupModal').style.display = 'none';
-            document.body.style.overflow = 'hidden';
-        }
-        
-        function closeLoginModal() {
-            document.getElementById('loginModal').style.display = 'none';
-            document.body.style.overflow = 'auto';
-        }
-        
-        function switchToLogin(event) {
-            event.preventDefault();
-            closeSignupModal();
-            openLoginModal();
-        }
-        
-        function switchToSignup(event) {
-            event.preventDefault();
-            closeLoginModal();
-            openSignupModal();
-        }
-        
-        function handleSignup(event) {
-            event.preventDefault();
-            const fullName = document.getElementById('fullName').value;
-            const email = document.getElementById('signupEmail').value;
-            const password = document.getElementById('signupPassword').value;
-            
-            // Add your signup logic here
-            console.log('Signup:', { fullName, email, password });
-            alert('Sign up successful!');
-            closeSignupModal();
-        }
-        
-        function handleLogin(event) {
-            event.preventDefault();
-            const email = document.getElementById('loginEmail').value;
-            const password = document.getElementById('loginPassword').value;
-            const rememberMe = document.getElementById('rememberMe').checked;
-            
-            // Add your login logic here
-            console.log('Login:', { email, password, rememberMe });
-            alert('Login successful!');
-            closeLoginModal();
-        }
-        
-        // Close modals when clicking outside
-        document.getElementById('signupModal').addEventListener('click', function(e) {
-            if (e.target === this) {
-                closeSignupModal();
-            }
+          productsGrid.appendChild(productCard);
         });
+      }
+
+      function hideCategoryProducts() {
+        // Hide products section
+        document.getElementById("category-products").style.display = "none";
+
+        // Show categories grid
+        document.querySelector(".categories-grid").style.display = "grid";
+      }
+
+      // Auth Modal Functions
+      function openSignupModal() {
+        const modal = document.getElementById("signupModal");
+        modal.style.display = "block";
+        // Force reflow
+        void modal.offsetWidth;
+        modal.classList.add("show");
+        document.body.style.overflow = "hidden";
+      }
+
+      function closeSignupModal() {
+        const modal = document.getElementById("signupModal");
+        modal.classList.remove("show");
+        setTimeout(() => {
+          modal.style.display = "none";
+          document.body.style.overflow = "auto";
+        }, 300);
+      }
+
+      function openLoginModal() {
+        const modal = document.getElementById("loginModal");
+        modal.style.display = "block";
+        // Force reflow
+        void modal.offsetWidth;
+        modal.classList.add("show");
+        document.body.style.overflow = "hidden";
+      }
+
+      function closeLoginModal() {
+        const modal = document.getElementById("loginModal");
+        modal.classList.remove("show");
+        setTimeout(() => {
+          modal.style.display = "none";
+          document.body.style.overflow = "auto";
+        }, 300);
+      }
+
+      function switchToLogin(event) {
+        event.preventDefault();
+        const signupModal = document.getElementById("signupModal");
+        const loginModal = document.getElementById("loginModal");
+        const signupForm = signupModal.querySelector(".modal");
         
-        document.getElementById('loginModal').addEventListener('click', function(e) {
-            if (e.target === this) {
-                closeLoginModal();
-            }
+        signupForm.classList.add("slide-out");
+        
+        setTimeout(() => {
+          signupModal.style.display = "none";
+          loginModal.style.display = "block";
+          const loginForm = loginModal.querySelector(".modal");
+          loginForm.classList.add("slide-in");
+          
+          // Force reflow
+          void loginModal.offsetWidth;
+          loginModal.classList.add("show");
+          
+          setTimeout(() => {
+            loginForm.classList.remove("slide-in");
+            signupForm.classList.remove("slide-out");
+          }, 50);
+        }, 300);
+      }
+
+      function switchToSignup(event) {
+        event.preventDefault();
+        const loginModal = document.getElementById("loginModal");
+        const signupModal = document.getElementById("signupModal");
+        const loginForm = loginModal.querySelector(".modal");
+        
+        loginForm.classList.add("slide-out");
+        
+        setTimeout(() => {
+          loginModal.style.display = "none";
+          signupModal.style.display = "block";
+          const signupForm = signupModal.querySelector(".modal");
+          signupForm.classList.add("slide-in");
+          
+          // Force reflow
+          void signupModal.offsetWidth;
+          signupModal.classList.add("show");
+          
+          setTimeout(() => {
+            signupForm.classList.remove("slide-in");
+            loginForm.classList.remove("slide-out");
+          }, 50);
+        }, 300);
+      }
+
+      function handleSignup(event) {
+        event.preventDefault();
+        const fullName = document.getElementById("fullName").value;
+        const email = document.getElementById("signupEmail").value;
+        const password = document.getElementById("signupPassword").value;
+
+        // Add your signup logic here
+        console.log("Signup:", { fullName, email, password });
+        alert("Sign up successful!");
+        closeSignupModal();
+      }
+
+      function handleLogin(event) {
+        event.preventDefault();
+        const email = document.getElementById("loginEmail").value;
+        const password = document.getElementById("loginPassword").value;
+        const rememberMe = document.getElementById("rememberMe").checked;
+
+        // Add your login logic here
+        console.log("Login:", { email, password, rememberMe });
+        alert("Login successful!");
+        closeLoginModal();
+      }
+
+      // Close modals when clicking outside
+      document
+        .getElementById("signupModal")
+        .addEventListener("click", function (e) {
+          if (e.target === this) {
+            closeSignupModal();
+          }
         });
 
-        // Update the button click handlers
-        document.getElementById('getStartedBtn').addEventListener('click', function() {
+      document
+        .getElementById("loginModal")
+        .addEventListener("click", function (e) {
+          if (e.target === this) {
+            closeLoginModal();
+          }
+        });
+
+      // Update the button click handlers
+      document
+        .getElementById("getStartedBtn")
+        .addEventListener("click", function () {
+          scrollToGiftFinder();
+        });
+
+      // Make sure the Sign Up button in header works
+      document
+        .querySelector("nav .cta-button")
+        .addEventListener("click", function () {
+          openSignupModal();
+        });
+
+      // Update modal functionality
+      document.addEventListener("DOMContentLoaded", function () {
+        // Get Started button
+        document
+          .getElementById("getStartedBtn")
+          .addEventListener("click", function () {
             scrollToGiftFinder();
-        });
+          });
 
-        // Make sure the Sign Up button in header works
-        document.querySelector('nav .cta-button').addEventListener('click', function() {
+        // Sign Up button in header
+        document
+          .querySelector("nav .cta-button")
+          .addEventListener("click", function () {
             openSignupModal();
+          });
+
+        // Close buttons
+        document.querySelectorAll(".close-modal").forEach((button) => {
+          button.addEventListener("click", function () {
+            closeSignupModal();
+            closeLoginModal();
+          });
         });
 
-        // Update modal functionality
-        document.addEventListener('DOMContentLoaded', function() {
-            // Get Started button
-            document.getElementById('getStartedBtn').addEventListener('click', function() {
-                scrollToGiftFinder();
-            });
-            
-            // Sign Up button in header
-            document.querySelector('nav .cta-button').addEventListener('click', function() {
-                openSignupModal();
-            });
-            
-            // Close buttons
-            document.querySelectorAll('.close-modal').forEach(button => {
-                button.addEventListener('click', function() {
-                    closeSignupModal();
-                    closeLoginModal();
-                });
-            });
-            
-            // Close on outside click
-            document.getElementById('signupModal').addEventListener('click', function(e) {
-                if (e.target === this) {
-                    closeSignupModal();
-                }
-            });
-            
-            document.getElementById('loginModal').addEventListener('click', function(e) {
-                if (e.target === this) {
-                    closeLoginModal();
-                }
-            });
-            
-            // Switch between signup and login
-            document.querySelectorAll('.auth-switch a').forEach(link => {
-                link.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    if (this.textContent.includes('Log In')) {
-                        closeSignupModal();
-                        openLoginModal();
-                    } else {
-                        closeLoginModal();
-                        openSignupModal();
-                    }
-                });
-            });
-        });
+        // Close on outside click
+        document
+          .getElementById("signupModal")
+          .addEventListener("click", function (e) {
+            if (e.target === this) {
+              closeSignupModal();
+            }
+          });
 
-        // Add gift icon click animation
-        document.addEventListener('DOMContentLoaded', function() {
-            const giftIcon = document.getElementById('giftIcon');
-            
-            giftIcon.addEventListener('click', function() {
-                this.classList.toggle('active');
-                
-                // Create multiple hearts
-                const rect = giftIcon.getBoundingClientRect();
-                const centerX = rect.left + rect.width / 2;
-                const centerY = rect.top + rect.height / 2;
-                
-                for (let i = 0; i < 8; i++) {
-                    const heart = document.createElement('div');
-                    heart.className = 'heart';
-                    heart.style.position = 'fixed';
-                    heart.style.width = '20px';
-                    heart.style.height = '20px';
-                    heart.style.background = '#FFB6C1';
-                    heart.style.transform = 'rotate(45deg)';
-                    heart.style.zIndex = '1000';
-                    
-                    // Random angle for heart direction
-                    const angle = (i * 45) + Math.random() * 30;
-                    const distance = 100 + Math.random() * 50;
-                    
-                    // Calculate final position
-                    const rad = angle * Math.PI / 180;
-                    const finalX = Math.cos(rad) * distance;
-                    const finalY = Math.sin(rad) * distance;
-                    
-                    // Set initial position
-                    heart.style.left = centerX + 'px';
-                    heart.style.top = centerY + 'px';
-                    
-                    // Set final position using CSS variables
-                    heart.style.setProperty('--tx', finalX + 'px');
-                    heart.style.setProperty('--ty', finalY + 'px');
-                    
-                    // Add to body
-                    document.body.appendChild(heart);
-                    
-                    // Animate heart
-                    heart.style.animation = `popHeart 1s ease-out ${i * 0.1}s forwards`;
-                    
-                    // Remove heart after animation
-                    setTimeout(() => {
-                        heart.remove();
-                    }, 1000 + (i * 100));
-                }
-            });
-        });
+        document
+          .getElementById("loginModal")
+          .addEventListener("click", function (e) {
+            if (e.target === this) {
+              closeLoginModal();
+            }
+          });
 
-        // Forgot Password Functions
-        function openForgotPasswordModal() {
-            document.getElementById('forgotPasswordModal').style.display = 'block';
-            document.getElementById('loginModal').style.display = 'none';
-            document.body.style.overflow = 'hidden';
-        }
-        
-        function closeForgotPasswordModal() {
-            document.getElementById('forgotPasswordModal').style.display = 'none';
-            document.body.style.overflow = 'auto';
-        }
-        
-        function handleForgotPassword(event) {
-            event.preventDefault();
-            const email = document.getElementById('resetEmail').value;
-            
-            // Add your password reset logic here
-            console.log('Password Reset Request:', { email });
-            alert('Password reset link has been sent to your email!');
-            closeForgotPasswordModal();
-        }
-
-        // Update the forgot password link click handler
-        document.querySelector('.forgot-password').addEventListener('click', function(e) {
+        // Switch between signup and login
+        document.querySelectorAll(".auth-switch a").forEach((link) => {
+          link.addEventListener("click", function (e) {
             e.preventDefault();
-            openForgotPasswordModal();
-        });
-
-        // Close forgot password modal when clicking outside
-        document.getElementById('forgotPasswordModal').addEventListener('click', function(e) {
-            if (e.target === this) {
-                closeForgotPasswordModal();
+            if (this.textContent.includes("Log In")) {
+              closeSignupModal();
+              openLoginModal();
+            } else {
+              closeLoginModal();
+              openSignupModal();
             }
+          });
+        });
+      });
+
+      // Add gift icon click animation
+      document.addEventListener("DOMContentLoaded", function () {
+        const giftIcon = document.getElementById("giftIcon");
+
+        giftIcon.addEventListener("click", function () {
+          this.classList.toggle("active");
+
+          // Create multiple hearts
+          const rect = giftIcon.getBoundingClientRect();
+          const centerX = rect.left + rect.width / 2;
+          const centerY = rect.top + rect.height / 2;
+
+          for (let i = 0; i < 8; i++) {
+            const heart = document.createElement("div");
+            heart.className = "heart";
+            heart.style.position = "fixed";
+            heart.style.width = "20px";
+            heart.style.height = "20px";
+            heart.style.background = "#FFB6C1";
+            heart.style.transform = "rotate(45deg)";
+            heart.style.zIndex = "1000";
+
+            // Random angle for heart direction
+            const angle = i * 45 + Math.random() * 30;
+            const distance = 100 + Math.random() * 50;
+
+            // Calculate final position
+            const rad = (angle * Math.PI) / 180;
+            const finalX = Math.cos(rad) * distance;
+            const finalY = Math.sin(rad) * distance;
+
+            // Set initial position
+            heart.style.left = centerX + "px";
+            heart.style.top = centerY + "px";
+
+            // Set final position using CSS variables
+            heart.style.setProperty("--tx", finalX + "px");
+            heart.style.setProperty("--ty", finalY + "px");
+
+            // Add to body
+            document.body.appendChild(heart);
+
+            // Animate heart
+            heart.style.animation = `popHeart 1s ease-out ${i * 0.1}s forwards`;
+
+            // Remove heart after animation
+            setTimeout(() => {
+              heart.remove();
+            }, 1000 + i * 100);
+          }
+        });
+      });
+
+      // Forgot Password Functions
+      function openForgotPasswordModal() {
+        document.getElementById("forgotPasswordModal").style.display = "block";
+        document.getElementById("loginModal").style.display = "none";
+        document.body.style.overflow = "hidden";
+      }
+
+      function closeForgotPasswordModal() {
+        document.getElementById("forgotPasswordModal").style.display = "none";
+        document.body.style.overflow = "auto";
+      }
+
+      function handleForgotPassword(event) {
+        event.preventDefault();
+        const email = document.getElementById("resetEmail").value;
+
+        // Add your password reset logic here
+        console.log("Password Reset Request:", { email });
+        alert("Password reset link has been sent to your email!");
+        closeForgotPasswordModal();
+      }
+
+      // Update the forgot password link click handler
+      document
+        .querySelector(".forgot-password")
+        .addEventListener("click", function (e) {
+          e.preventDefault();
+          openForgotPasswordModal();
         });
 
-        // Add these functions for the Support section modals
-        function openContactModal() {
-            document.getElementById('contactModal').style.display = 'block';
-            document.body.style.overflow = 'hidden';
-        }
+      // Close forgot password modal when clicking outside
+      document
+        .getElementById("forgotPasswordModal")
+        .addEventListener("click", function (e) {
+          if (e.target === this) {
+            closeForgotPasswordModal();
+          }
+        });
 
-        function closeContactModal() {
-            document.getElementById('contactModal').style.display = 'none';
-            document.body.style.overflow = 'auto';
-        }
+      // Add these functions for the Support section modals
+      function openContactModal() {
+        document.getElementById("contactModal").style.display = "block";
+        document.body.style.overflow = "hidden";
+      }
 
-        function openFaqModal() {
-            document.getElementById('faqModal').style.display = 'block';
-            document.body.style.overflow = 'hidden';
-        }
+      function closeContactModal() {
+        document.getElementById("contactModal").style.display = "none";
+        document.body.style.overflow = "auto";
+      }
 
-        function closeFaqModal() {
-            document.getElementById('faqModal').style.display = 'none';
-            document.body.style.overflow = 'auto';
-        }
+      function openFaqModal() {
+        document.getElementById("faqModal").style.display = "block";
+        document.body.style.overflow = "hidden";
+      }
 
-        function openPrivacyModal() {
-            document.getElementById('privacyModal').style.display = 'block';
-            document.body.style.overflow = 'hidden';
-        }
+      function closeFaqModal() {
+        document.getElementById("faqModal").style.display = "none";
+        document.body.style.overflow = "auto";
+      }
 
-        function closePrivacyModal() {
-            document.getElementById('privacyModal').style.display = 'none';
-            document.body.style.overflow = 'auto';
-        }
+      function openPrivacyModal() {
+        document.getElementById("privacyModal").style.display = "block";
+        document.body.style.overflow = "hidden";
+      }
 
-        function openTermsModal() {
-            document.getElementById('termsModal').style.display = 'block';
-            document.body.style.overflow = 'hidden';
-        }
+      function closePrivacyModal() {
+        document.getElementById("privacyModal").style.display = "none";
+        document.body.style.overflow = "auto";
+      }
 
-        function closeTermsModal() {
-            document.getElementById('termsModal').style.display = 'none';
-            document.body.style.overflow = 'auto';
-        }
+      function openTermsModal() {
+        document.getElementById("termsModal").style.display = "block";
+        document.body.style.overflow = "hidden";
+      }
 
-        function handleContact(event) {
-            event.preventDefault();
-            const name = document.getElementById('contactName').value;
-            const email = document.getElementById('contactEmail').value;
-            const subject = document.getElementById('contactSubject').value;
-            const message = document.getElementById('contactMessage').value;
-            
-            // Add your contact form submission logic here
-            console.log('Contact Form:', { name, email, subject, message });
-            alert('Thank you for your message! We will get back to you soon.');
+      function closeTermsModal() {
+        document.getElementById("termsModal").style.display = "none";
+        document.body.style.overflow = "auto";
+      }
+
+      function handleContact(event) {
+        event.preventDefault();
+        const name = document.getElementById("contactName").value;
+        const email = document.getElementById("contactEmail").value;
+        const subject = document.getElementById("contactSubject").value;
+        const message = document.getElementById("contactMessage").value;
+
+        // Add your contact form submission logic here
+        console.log("Contact Form:", { name, email, subject, message });
+        alert("Thank you for your message! We will get back to you soon.");
+        closeContactModal();
+      }
+
+      // Close modals when clicking outside
+      document
+        .getElementById("contactModal")
+        .addEventListener("click", function (e) {
+          if (e.target === this) {
             closeContactModal();
-        }
-
-        // Close modals when clicking outside
-        document.getElementById('contactModal').addEventListener('click', function(e) {
-            if (e.target === this) {
-                closeContactModal();
-            }
+          }
         });
 
-        document.getElementById('faqModal').addEventListener('click', function(e) {
-            if (e.target === this) {
-                closeFaqModal();
-            }
+      document
+        .getElementById("faqModal")
+        .addEventListener("click", function (e) {
+          if (e.target === this) {
+            closeFaqModal();
+          }
         });
 
-        document.getElementById('privacyModal').addEventListener('click', function(e) {
-            if (e.target === this) {
-                closePrivacyModal();
-            }
+      document
+        .getElementById("privacyModal")
+        .addEventListener("click", function (e) {
+          if (e.target === this) {
+            closePrivacyModal();
+          }
         });
 
-        document.getElementById('termsModal').addEventListener('click', function(e) {
-            if (e.target === this) {
-                closeTermsModal();
-            }
+      document
+        .getElementById("termsModal")
+        .addEventListener("click", function (e) {
+          if (e.target === this) {
+            closeTermsModal();
+          }
         });
     </script>
-</body>
-</html> 
+  </body>
+</html>
