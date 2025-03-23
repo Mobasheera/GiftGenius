@@ -1,6 +1,6 @@
 # 🎁 GiftGenius - AI Powered Gift Recommendation System
 
-GiftGenius is an AI-powered, RAG-based gift recommendation system designed to help users find the perfect gift based on interests, budget, and occasion. Built for a 24-hour hackathon, this project leverages Retrieval-Augmented Generation (RAG), MySQL, and a modern web stack to deliver personalized gift suggestions.
+GiftGenius is an AI-powered, RAG-based gift recommendation system designed to help users find the perfect gift based on interests, budget, and occasion. Built for a 24-hour hackathon, this project leverages Retrieval-Augmented Generation (RAG), MySQL and a modern web stack to deliver personalized gift suggestions.
 
 ---
 
