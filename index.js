@@ -6,6 +6,12 @@ const app = express();
 app.use(express.json());  
 app.use(cors());
 
+// ✅ Middleware to log incoming requests
+app.use((req, res, next) => {
+  console.log(`🔍 Received ${req.method} request on ${req.url}`);
+  next();
+});
+
 // ✅ Use Railway MySQL connection details instead of local MySQL
 const db = mysql.createConnection({
   host: 'mysql.railway.internal',
@@ -70,8 +76,7 @@ app.get('/products_paginated', (req, res) => {
 });
 
 // ✅ Start the Express server
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
+const PORT = process.env.PORT || 8080;
+app.listen(PORT, '0.0.0.0', () => {
   console.log(`Server is running on port ${PORT}`);
 });
-
