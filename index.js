@@ -18,12 +18,13 @@ app.use((req, res, next) => {
 // ✅ Use Railway MySQL connection details (Uses pool for better stability)
 const db = mysql.createPool({
   connectionLimit: 10,
-  host: process.env.MYSQLHOST || "mysql.railway.internal",
-  user: process.env.MYSQLUSER || "root",
-  password: process.env.MYSQLPASSWORD || "lSxhjCOrUJevgjYrnkRxZnqOBPljqotB",
-  database: process.env.MYSQLDATABASE || "railway",
-  port: process.env.MYSQLPORT || 3306,
+  host: process.env.MYSQLHOST || 'mysql.railway.internal',
+  user: process.env.MYSQLUSER || 'root',
+  password: process.env.MYSQLPASSWORD,  // 🔹 No more hardcoded password!
+  database: process.env.MYSQLDATABASE || 'railway',
+  port: process.env.MYSQLPORT || 3306
 });
+
 
 // ✅ Keep MySQL connection alive to prevent timeouts
 setInterval(() => {
